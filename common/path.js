@@ -3,17 +3,10 @@
  */
 
 
-//const HOSTNAME = 'https://app.farben.com.cn';//正式服务器地址
-//const BPMIMAGEHOST = 'http://process.farben.com.cn:8080'//流程图正式环境
-
 
 const HOSTNAME = 'http://192.168.0.251:8888';//测试服务器地址
-//const HOSTNAME = 'http://172.10.18.52:8081';//ken
-//const HOSTNAME = 'http://192.168.0.123:8080';//Yuli
-
 
 const BPMIMAGEHOST = 'http://192.168.0.112:9000'//流程图测试环境
-//const BPMIMAGEHOST = 'http://172.10.11.142:8888'//流程图测试环境
 // const HOSTNAME = 'api';//服务器地址
 
 
