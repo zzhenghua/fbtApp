@@ -1,0 +1,139 @@
+{
+    "pages" : [
+        //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+        {
+            "path" : "pages/index/index",
+            "style" : {
+                "app-plus" : {
+                    //"bounce" : "none", //关闭窗口回弹效果
+                    "titleNView" : {
+                        "titleText" : "",
+                        "tags" : [
+                            {
+                                "id" : "logoImg",
+                                "tag" : "img",
+                                "src" : "./static/logo.png",
+                                "position" : {
+                                    "top" : "13px",
+                                    "left" : "35%",
+                                    "width" : "30%",
+                                    "height" : "25px",
+                                    "align" : "center"
+                                },
+                                "align" : "center"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path" : "pages/worktop/worktop",
+            "style" : {
+                "app-plus" : {
+                    //"bounce" : "none", //关闭窗口回弹效果
+                    "titleNView" : {
+                        "titleText" : "",
+                        "tags" : [
+                            {
+                                "id" : "logoImg",
+                                "tag" : "img",
+                                "src" : "./static/logo.png",
+                                "position" : {
+                                    "top" : "13px",
+                                    "left" : "35%",
+                                    "width" : "30%",
+                                    "height" : "25px",
+                                    "align" : "center"
+                                },
+                                "align" : "center"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path" : "pages/person/person",
+            "style" : {
+                "app-plus" : {
+                    //"bounce" : "none", //关闭窗口回弹效果
+                    "titleNView" : {
+                        "titleText" : "",
+                        "tags" : [
+                            {
+                                "id" : "logoImg",
+                                "tag" : "img",
+                                "src" : "./static/logo.png",
+                                "position" : {
+                                    "top" : "13px",
+                                    "left" : "35%",
+                                    "width" : "30%",
+                                    "height" : "25px",
+                                    "align" : "center"
+                                },
+                                "align" : "center"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path" : "pages/person/login/login",
+            "style" : {
+				"navigationBarTitleText" : "登录"
+			}
+        },
+        {
+            "path" : "pages/icon/icon",
+            "style" : {
+				"navigationBarTitleText" : "icon",
+					"app-plus" : {
+						"titleNView" : {
+							"buttons" : [
+								{
+									"text" : "\ue656",
+									"fontSrc" : "/static/iconfont.ttf",
+									"fontSize" : "22px",
+									"color" : "#999999"
+								}
+							]
+						}
+					}
+			}
+        }
+    ],
+    "globalStyle" : {
+        "navigationBarTextStyle" : "#ffffff",
+        "navigationBarTitleText" : "",
+        "navigationBarBackgroundColor" : "#0093dd",
+        "backgroundColor" : "#0093dd"
+    },
+    "tabBar" : {
+        "color" : "#666666",
+        "selectedColor" : "#0093dd",
+        "borderStyle" : "black",
+        "backgroundColor" : "#ffffff",
+        "list" : [
+            {
+                "pagePath" : "pages/index/index",
+                "iconPath" : "static/home.png",
+                "selectedIconPath" : "static/home_a.png",
+                "text" : "首页"
+            },
+            {
+                "pagePath" : "pages/worktop/worktop",
+                "iconPath" : "static/worktop.png",
+                "selectedIconPath" : "static/worktop_a.png",
+                "text" : "工作台"
+            },
+            {
+                "pagePath" : "pages/person/person",
+                "iconPath" : "static/person.png",
+                "selectedIconPath" : "static/person_a.png",
+                "text" : "我的"
+            }
+        ]
+    }
+}
