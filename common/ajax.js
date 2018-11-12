@@ -30,7 +30,7 @@ const requst = function(type,url,data,successBack,errorBack,completeBack){
 					errorBack(res.data);
 				}
         //this.text = 'request success';
-    },
+		},
 		fail: ()=>{
 			// errorBack();
 		},

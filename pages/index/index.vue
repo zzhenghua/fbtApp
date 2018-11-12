@@ -34,7 +34,7 @@
 					<!-- <uni-badge text="1" type="danger"></uni-badge> -->
 				</view>
 			</view>
-			<view class="uni-list-cell" v-for="(item,index) in list" :key="index" hover-class="uni-list-cell-hover">
+			<view class="uni-list-cell" v-for="(item,index) in ggList" :key="index" hover-class="uni-list-cell-hover">
 				<view class="uni-list-cell-navigate uni-flex">
 					<view class="uni-flex-item uni-ellipsis">{{item.title}}</view> 
 					<text class="font12 c999">{{item.publishDate}}</text>
@@ -47,12 +47,6 @@
 			<button type="primary" class="primary" size="mini">图标</button>
 		</navigator>
 		<!-- <button type="primary"@tap="goLogin">登录</button> -->
-		<navigator url="../person/login/login">
-			登录
-		</navigator>
-		<navigator url="../person/login/login">
-			<button type="primary" class="primary" size="mini">登录</button>
-		</navigator>
 			<button type="primary" class="primary" size="mini" @tap="clearUserInfo">清除缓存</button>
 		<!-- <view>1122121</view><br/><br/><br/>
 		<view>1122121</view><br/><br/><br/>
@@ -86,24 +80,29 @@
 		data() {
 			return {
 				testImgs:['./../../static/img1.png','./../../static/img1_1.png'],
-				title: 'Hello',
-				animate:false,
-				list:[{"publishDate":"2018-08-20 11:08:27","description":"是的啊","publisher":"系统管理员","id":"10000002","title":"法本信息科技有限公司"},{"publishDate":"2018-08-01 18:25:13","description":"","publisher":"系统管理员","id":"10000001","title":"APP确认考勤操作指引"}]
+				list:[{"publishDate":"2018-08-20 11:08:27","description":"是的啊","publisher":"系统管理员","id":"10000002","title":"法本信息科技有限公司"},{"publishDate":"2018-08-01 18:25:13","description":"","publisher":"系统管理员","id":"10000001","title":"APP确认考勤操作指引"}],
+				dclAcount:0,//待处理数量
+				hasKq:false,//是否有考勤需确认
+				menuList:[],//菜单列表
+				ggList:[],//公告列表
+				ygList:[],//员工风采列表
+				showGg:false,
+				showYg:false,
+				animate:true
 			};
+		},
+		computed:{
+			...mapState(['userInfo'])
 		},
 		components: {
 			uniBadge
 		},
 		onLoad() {
 			console.log('onLoad')
-			/* let userInfo = uni.getStorageSync('userInfo');
-			if(!userInfo){
-				uni.redirectTo({
-					url:'../person/login/login'
-				})
-			}else{
-				this.getUserInfo({userInfo:userInfo});
-			} */
+			this.getDclAcount();
+			this.getMenu();
+			this.getGgList();
+			this.getYgList();
 		},
 		methods:{
 			...mapMutations(['getUserInfo']),
@@ -114,6 +113,75 @@
 			},
 			clearUserInfo(){
 				uni.removeStorageSync('userInfo');
+			},
+			getDclAcount(){
+				//获取待处理列表
+				this.$ajax.post(this.$path.APPROVEPENDING,{
+					loginName:this.userInfo.loginName,
+					token:this.userInfo.token,
+					subject:'',
+					page:0,
+					pageSize:10
+				},(res)=>{
+					this.dclAcount = res.data.count;
+//					this[list] = res.data.adList;
+
+				},(error)=> {
+				});
+			},
+			getMenu(){
+				this.$ajax.post(this.$path.WORKBENCHLIST,{
+					"userId":this.userInfo.userId,
+					"loginName":this.userInfo.loginName,
+					"token":this.userInfo.token,
+				},(res)=>{
+					//if(res.code=='0'){
+						let list = res.data.resourceList,hasGg=false,hasYg=false;
+						this.menuList = list.reverse();
+						for(let i=0;i<list.length;i++){
+							if(list[i].id==157){//公告
+								hasGg = true;
+								
+							}else if(list[i].id==158){//员工风采
+								hasYg = true;
+								
+							}
+						}
+						this.showGg=hasGg?true:false;
+						this.showYg=hasYg?true:false;
+					//}
+				},(error)=> {
+//					this.requestStatus = 2;
+				    //mui.toast(error);
+				});
+			},
+			//获取公告列表
+			getGgList(){
+				this.$ajax.post(this.$path.APPKNOLEDGEKNOLEDGELIST,{
+					"loginName":this.userInfo.loginName,
+					"token":this.userInfo.token,
+					"keyword":'',
+					"knoType":"2",
+					"page":1,
+					"pageSize":5
+				},(res)=>{
+					this.ggList = res.data.data;
+				},(error)=> {
+				});
+			},
+			//获取公告列表
+			getYgList(){
+				this.$ajax.post(this.$path.APPKNOLEDGEKNOLEDGELIST,{
+					"loginName":this.userInfo.loginName,
+					"token":this.userInfo.token,
+					"keyword":'',
+					"knoType":"3",
+					"page":1,
+					"pageSize":5
+				},(res)=>{
+					this.ygList = res.data.data;
+				},(error)=> {
+				});
 			}
 		}
 	}
