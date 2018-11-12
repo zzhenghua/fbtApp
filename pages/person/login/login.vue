@@ -48,9 +48,33 @@
 				password: ''
 			};
 		},
+		onLoad() {
+			// console.log("userInfo");
+			//先进入登录页面，验证是否登录，然后进入主页
+			//注意：如果是在主页验证登录再跳转，会出现闪烁的情况，影响用户体验
+			// let userInfo = uni.getStorageSync('userInfo');
+			let _this = this;
+			uni.getStorage({
+				key: 'userInfo',
+				success: function (res) {
+					console.log("userInfo:"+res.data);
+					_this.getUserInfo({userInfo:res.data});
+					uni.reLaunch({
+						url:'../../index/index'
+					})
+				}
+			});
+			
+			/* if(userInfo){
+				
+			}else{
+				this.getUserInfo({userInfo:userInfo});
+			} */
+		},
 		methods:{
-			...mapMutations (['getUserInfo']),
+			...mapMutations(['getUserInfo']),
 			bindLogin(){
+				let _this = this;
 				if(this.account.trim()==''){
 					return uni.showToast({
 						icon:'none',
@@ -63,14 +87,14 @@
 						title: '请输入密码'
 					})
 				}
+				uni.showLoading({mask:true});
 				this.$ajax.post(this.$path.APPLOGIN,{
 					loginName: this.account,
 					password: md5(this.password),
 					cid:cid
 				},function(res){
-					console.log(JSON.stringify(res));
 					uni.setStorageSync('userInfo',JSON.stringify(res.data))
-					this.getUserInfo({userInfo:res.data});
+					_this.getUserInfo({userInfo:res.data});
 					uni.showToast({
 						title:"登录成功！"
 					})

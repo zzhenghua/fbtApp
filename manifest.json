@@ -2,7 +2,7 @@
     "name" : "fbtApp",
     "appid" : "__UNI__8B58A15",
     "description" : "",
-    "versionName" : "1.0.0",
+    "versionName" : "1.5.0",
     "versionCode" : "100",
     "transformPx" : false,
     "app-plus" : {
@@ -50,7 +50,8 @@
         /* 小程序特有相关 */
         "appid" : "wxf2d8b971bdaf1a9d",
         "setting" : {
-            "urlCheck" : true
+            "urlCheck" : false,
+            "postcss" : false
         }
     }
 }

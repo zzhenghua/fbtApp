@@ -1,9 +1,58 @@
 <script>
 	import util from "common/util.js"
+	
 	export default {
 		onLaunch: function () {
-			console.log('App Launch')
-			let userInfo = uni.getStorageSync('userInfo');
+			uni.onNetworkStatusChange(function (res) {
+				if(!res.isConnected){
+					uni.showToast({
+						icon:'none',
+						title:"请检查网络"
+					})
+				}
+				/* console.log(res.isConnected);
+				console.log(res.networkType); */
+			});
+			
+			
+			/* var pages = getCurrentPages();
+			var page = pages[pages.length - 1];
+			// #ifdef APP-PLUS
+			var currentWebview = page.$getAppWebview();
+			console.log(currentWebview.id);
+			currentWebview.load('pages/person/login/login');
+			currentWebview.setStyle({
+				titleNView:{
+					titleText:"登录"
+				}
+			});
+			// #endif */
+			
+			
+			
+			
+			
+			/* uni.showModal({
+				title: '提示',
+				content: '这是一个模态弹窗',
+				success: function (res) {
+					if (res.confirm) {
+						console.log('用户点击确定');
+					} else if (res.cancel) {
+						console.log('用户点击取消');
+					}
+				}
+			}); */
+			/* setTimeout(()=>{
+				let userInfo = uni.getStorageSync('userInfo');
+				if(!userInfo){
+					uni.reLaunch({
+						url:'./pages/person/login/login'
+					})
+				}else{
+					this.getUserInfo({userInfo:userInfo});
+				}
+			},100) */
 			
 // 			uni.getStorage({
 // 				key: 'userInfo',
@@ -20,7 +69,7 @@
 		},
 		onHide: function () {
 			console.log('App Hide')
-		}
+		},
 	}
 </script>
 
@@ -248,5 +297,15 @@
 		.color3 {
 			background-color: #F1F1F1;
 			color: #353535;
+		}
+		button.primary {
+			background-color: #0093dd;
+		}
+		.mui-btn1{
+			display: inline-block;
+			padding:0px 8px !important;
+			font-size: 13px;
+			border-radius: 10px;
+			margin-right: 5px;
 		}
 </style>

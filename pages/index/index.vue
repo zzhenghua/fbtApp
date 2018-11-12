@@ -8,24 +8,13 @@
 		</swiper>
 		<section style="padding: 0 15px;">
 				<div class="matter">
-					<button type="primary" size="mini">待处理<uni-badge type="warning" text="1"></uni-badge></button>
-					<uni-badge type="purple" :inverted="true" text="1"></uni-badge>
+					<button type="primary" size="mini" class="mui-btn1 primary">待处理<uni-badge type="default" text="1"></uni-badge></button>
+					<!-- <uni-badge type="purple" :inverted="true" text="1"></uni-badge> -->
 					<!-- <button class="mui-btn1 mui-btn-primary animated" style="animation-delay: 0.5s;">待处理 <span class="mui-badge mui-badge-success">1</span></button> -->
 						<!-- <navigator url="" type="button" class="mui-btn1 mui-btn-primary animated"  :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理 <span class="mui-badge mui-badge-success">{{dclAcount}}</span></navigator> -->
 						<!-- <navigator url="" type="button" class="mui-btn1 mui-btn-danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤 </navigator> -->
 				</div>
 			</section>
-			<view class='title'>
-				<text>无底色</text>
-			</view>
-			<view>
-				<uni-badge text="1" :inverted="true"></uni-badge>
-				<uni-badge text="12" type="primary" :inverted="true"></uni-badge>
-				<uni-badge text="123" type="success" :inverted="true"></uni-badge>
-				<uni-badge text="3" type="warning" :inverted="true"></uni-badge>
-				<uni-badge text="45" type="danger" :inverted="true"></uni-badge>
-				<uni-badge text="456" type="purple" :inverted="true"></uni-badge>
-			</view>
 		<!-- <div class="mui-clearfix section_head" v-if="ggList.length>0">
 				<h4 class="mui-pull-left section_title"><span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;"></span>公告</h4>
 				<router-link tag="a" to="/worktop/notice" class="mui-pull-right">更多</router-link>
@@ -33,7 +22,8 @@
 		<view class="section">
 			<view class="section_head uni-flex">
 				<view class="section_title uni-flex-item">
-					<span class="iconfont icon" style="background: #e7b55e;">&#xe6bb;</span><text>1</text>公告
+					<span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;">&#xe600;</span>
+					<text class="bold">公告</text>
 				</view>
 				<navigator url="">更多</navigator>
 			</view>
@@ -45,20 +35,25 @@
 				</view>
 			</view>
 			<view class="uni-list-cell" v-for="(item,index) in list" :key="index" hover-class="uni-list-cell-hover">
-				<view class="uni-list-cell-navigate uni-navigate-right">
-					{{item.title}} 
-					<text>{{item.publishDate}}</text>
+				<view class="uni-list-cell-navigate uni-flex">
+					<view class="uni-flex-item uni-ellipsis">{{item.title}}</view> 
+					<text class="font12 c999">{{item.publishDate}}</text>
 				</view>
 			</view>
 		</view>
 		</view>
+		
 		<navigator url="../icon/icon">
-			<button type="primary">图标</button>
+			<button type="primary" class="primary" size="mini">图标</button>
 		</navigator>
 		<!-- <button type="primary"@tap="goLogin">登录</button> -->
 		<navigator url="../person/login/login">
 			登录
 		</navigator>
+		<navigator url="../person/login/login">
+			<button type="primary" class="primary" size="mini">登录</button>
+		</navigator>
+			<button type="primary" class="primary" size="mini" @tap="clearUserInfo">清除缓存</button>
 		<!-- <view>1122121</view><br/><br/><br/>
 		<view>1122121</view><br/><br/><br/>
 		<view>1122121</view><br/><br/><br/>
@@ -80,23 +75,12 @@
 		<view class="">
 			<text class="title">{{title}}</text>
 		</view>
-		<!-- <section class="animated" :class="{fadeInUp:animate}" v-if="showGg">
-			<div class="mui-clearfix section_head" v-if="ggList.length>0">
-				<h4 class="mui-pull-left section_title"><span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;"></span>公告</h4>
-				<router-link tag="a" to="/worktop/notice" class="mui-pull-right">更多</router-link>
-			</div>
-			<ul class="mui-table-view" v-if="ggList.length>0">
-				<router-link tag="li" :to="{path:'/worktop/notice/details',query:{type:'2',id:item.id}}" v-for="item in ggList"  :key="item.id" class="mui-table-view-cell flex">
-					<div class="flexItem mui-ellipsis">{{item.title}}</div>
-					<div class="time font12">{{item.publishDate}}</div>
-				</router-link>
-			</ul>
-		</section> -->
 	</view>
 </template>
 
 <script>
 	import uniBadge from "./../../components/uni-badge.vue";
+	import { mapState ,mapMutations} from 'vuex'
 	
 	export default {
 		data() {
@@ -111,12 +95,25 @@
 			uniBadge
 		},
 		onLoad() {
+			console.log('onLoad')
+			/* let userInfo = uni.getStorageSync('userInfo');
+			if(!userInfo){
+				uni.redirectTo({
+					url:'../person/login/login'
+				})
+			}else{
+				this.getUserInfo({userInfo:userInfo});
+			} */
 		},
 		methods:{
+			...mapMutations(['getUserInfo']),
 			goLogin(){
 				uni.reLaunch({
 					url:'../person/login/login'
 				})
+			},
+			clearUserInfo(){
+				uni.removeStorageSync('userInfo');
 			}
 		}
 	}
@@ -134,9 +131,6 @@
 	}
 	.container {
   height: calc(100% - 50px);
-}
-.mui-btn1{
-	display: inline-block;
 }
 
 .section_head {
@@ -160,5 +154,16 @@
   color: #fff;
   font-size: 16px;
   margin-right: 5px;
+}
+.uni-list{
+	  padding-bottom: 8px;
+    padding-top: 5px;
+}
+.uni-list .uni-list-cell-navigate{
+	padding: 6px 15px;
+}
+.uni-list .uni-list-cell:after {
+    background-color: #e1e0e2;
+    height: 0;
 }
 </style>
