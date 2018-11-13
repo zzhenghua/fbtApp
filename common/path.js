@@ -1,12 +1,12 @@
 /*
  * 接口地址
  */
-const HOSTNAME = 'https://app.farben.com.cn';//正式服务器地址
-const BPMIMAGEHOST = 'http://process.farben.com.cn:8080'//流程图正式环境
 
-// const HOSTNAME = 'http://192.168.0.251:8888';//测试服务器地址
 
-// const BPMIMAGEHOST = 'http://192.168.0.112:9000'//流程图测试环境
+
+const HOSTNAME = 'http://192.168.0.251:8888';//测试服务器地址
+
+const BPMIMAGEHOST = 'http://192.168.0.112:9000'//流程图测试环境
 // const HOSTNAME = 'api';//服务器地址
 
 
