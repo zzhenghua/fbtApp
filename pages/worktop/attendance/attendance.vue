@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		
-		<time-view @getSubmitShow="getSubmitShow" :currentText="currentText" :activeDateList="labelDate" @getAjax="getLeaveStatistics" @selectTime="selectTime" :activeClass="activeClass"></time-view>
+		<time-view ref="vueTimes" @getSubmitShow="getSubmitShow" :currentText="currentText" :activeDateList="labelDate" @getAjax="getLeaveStatistics" @selectTime="selectTime" :activeClass="activeClass"></time-view>
 		
 		<view class="">
 			<button type="primary" class="mui-btn1 primary" size="mini" @tap="dtMode='year';showDtPicker=true">year</button>
@@ -89,6 +89,7 @@
 				this.currentText.year = value.split('-')[0];
 				this.currentText.month = value.split('-')[1];
 				this.hideDtPicker();
+				this.$refs.vueTimes.getMonthDay();
 			},
 			submiteForm:function(submiteBtn){
 				let _this = this;

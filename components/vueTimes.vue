@@ -198,7 +198,7 @@
 				}else{
 					this.showBtn = false
 				}
-				this.getMonthDay();
+				// this.getMonthDay();
 			}
 		}
 	}
