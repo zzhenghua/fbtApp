@@ -14,55 +14,6 @@
 				console.log(res.networkType); */
 			});
 			
-			
-			/* var pages = getCurrentPages();
-			var page = pages[pages.length - 1];
-			// #ifdef APP-PLUS
-			var currentWebview = page.$getAppWebview();
-			console.log(currentWebview.id);
-			currentWebview.load('pages/person/login/login');
-			currentWebview.setStyle({
-				titleNView:{
-					titleText:"登录"
-				}
-			});
-			// #endif */
-			
-			
-			
-			
-			
-			/* uni.showModal({
-				title: '提示',
-				content: '这是一个模态弹窗',
-				success: function (res) {
-					if (res.confirm) {
-						console.log('用户点击确定');
-					} else if (res.cancel) {
-						console.log('用户点击取消');
-					}
-				}
-			}); */
-			/* setTimeout(()=>{
-				let userInfo = uni.getStorageSync('userInfo');
-				if(!userInfo){
-					uni.reLaunch({
-						url:'./pages/person/login/login'
-					})
-				}else{
-					this.getUserInfo({userInfo:userInfo});
-				}
-			},100) */
-			
-// 			uni.getStorage({
-// 				key: 'userInfo',
-// 				success: function (res) {
-// 					userInfo = JSON.parse(res.data);
-// 					console.log('res.data:'+res.data);
-// 				}
-// 			});
-			// console.log('res.data2:'+res.data);
-			
 		},
 		onShow: function () {
 			console.log('App Show')
@@ -77,10 +28,11 @@
 	/* 这是页面的公用css */
 		@import "./common/uni.css";
 		@import "./common/main.css";
+		@import "./common/animate.css";
 		
 			
 		page {
-			background-color: #F8F8F8;
+			background-color: #efeff4;
 			height: 100%;
 			font-size: 32upx;
 			line-height: 1.6;
@@ -301,11 +253,19 @@
 		button.primary {
 			background-color: #0093dd;
 		}
+		button.danger{
+			background-color: #dd524d;
+			color: #FFFFFF;
+		}
 		.mui-btn1{
 			display: inline-block;
 			padding:0px 8px !important;
 			font-size: 13px;
 			border-radius: 10px;
 			margin-right: 5px;
+		}
+		.section{
+			margin-top: 10px;
+			background: #FFFFFF;
 		}
 </style>

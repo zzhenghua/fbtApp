@@ -127,6 +127,10 @@ body {
 }
 
 /*font-size,默认14px*/
+.font0 {
+  font-size: 0px;
+}
+
 .font10 {
   font-size: 10px;
 }

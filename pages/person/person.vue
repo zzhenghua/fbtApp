@@ -1,38 +1,31 @@
 <template>
 	<view class="page">
-	<view class="uni-list">
-		<view class="uni-list-cell" v-for="(item,index) in list" :key="index">
-			<view class="uni-list-cell-navigate uni-navigate-right">
-				{{item.value}}
-			</view>
-		</view>
-	</view>
 	
-	<view class="uni-list">
-		<view class="uni-list-cell" hover-class="uni-list-cell-hover" v-for="(item,index) in list" :key="index">
-			<view class="uni-media-list">
-				<image class="uni-media-list-logo userImg" :src="item.img"></image>
-				<view class="uni-media-list-body">
-					<view class="uni-media-list-text-top">{{item.title}}</view>
-					<view class="uni-media-list-text-bottom uni-ellipsis">{{item.content}}</view>
+	<view class="uni-list ">
+		<view class="uni-list-cell">
+			<view class="uni-list-cell-navigate uni-flex" style="justify-content: center;padding: 15px;">
+				<view class="imgBox">
+					 <image class="userImg" :src="userInfo.picture||photo"></image>
+				</view>
+				<view class="uni-flex-item">
+					<view>{{userInfo.cname}}</view>
+					<text>{{userInfo.loginName}}</text>
 				</view>
 			</view>
 		</view>
 	</view>
 	
-	<section>
-		<ul class="mui-table-view">
-			<li class="mui-table-view-cell mui-media">
-				<navigator url="/person/userInfo">
-					<div class="mui-media-object mui-pull-left"><image class="userImg" :src="photo"></image></div>
-					<div class="mui-media-body">
-						<div class="font16 userName">{{userInfo.cname}}</div>
-						<p class="mui-ellipsis"><span class="c999">工号：</span>{{userInfo.loginName}}</p>
-					</div>
-				</navigator>
-			</li>
-		</ul>
-	</section>
+	<view class="uni-list section">
+		<view class="uni-list-cell">
+			<view class="uni-list-cell-navigate c333" hover-class="uni-list-cell-hover">
+				<view class="">
+					<icon class="iconfont icon-shezhi">&#xe7a0;</icon>
+					设置
+				</view>
+			</view>
+		</view>
+	</view>
+	
 	<!-- <section>
 		<ul class="mui-table-view setList">
 				<router-link to="/person/setting" tag="li" class="mui-table-view-cell font16 c333">
@@ -44,14 +37,15 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
-				userInfo:{
-					cname:'张三',
-					loginName:'0001'
-					
-				},
+// 				userInfo:{
+// 					cname:'张三',
+// 					loginName:'0001'
+// 					
+// 				},
 				photo:'./../../static/img2.jpg',
 				list:[{
 					title:'1212',
@@ -59,6 +53,9 @@
 					content:'contentcontentcontentcontent'
 				}]
 			};
+		},
+		computed:{
+			...mapState(['userInfo'])
 		}
 	}
 </script>
@@ -85,10 +82,24 @@
   max-width: inherit;
   background-size: cover;
 }
-
-.mui-table-view .userImg {
+.imgBox{
+	width: 68px;
+	height: 68px;
+	margin-right: 10px;
+}
+.userImg {
   max-width: 68px;
   height: 68px;
   border-radius: 10px;
+}
+.iconfont{
+	  vertical-align: middle;
+    margin-right: 5px;
+		font-size: 22px;
+    color: #666
+}
+.uni-list:after,
+.uni-list:before{
+	height: 0px;
 }
 </style>

@@ -6,20 +6,16 @@
 				<!-- <view class="swiper-item"><image :src="item" mode="widthFix"></image></view> -->
 			</swiper-item>
 		</swiper>
-		<section style="padding: 0 15px;">
-				<div class="matter">
-					<button type="primary" size="mini" class="mui-btn1 primary">待处理<uni-badge type="default" text="1"></uni-badge></button>
-					<!-- <uni-badge type="purple" :inverted="true" text="1"></uni-badge> -->
-					<!-- <button class="mui-btn1 mui-btn-primary animated" style="animation-delay: 0.5s;">待处理 <span class="mui-badge mui-badge-success">1</span></button> -->
-						<!-- <navigator url="" type="button" class="mui-btn1 mui-btn-primary animated"  :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理 <span class="mui-badge mui-badge-success">{{dclAcount}}</span></navigator> -->
-						<!-- <navigator url="" type="button" class="mui-btn1 mui-btn-danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤 </navigator> -->
-				</div>
-			</section>
-		<!-- <div class="mui-clearfix section_head" v-if="ggList.length>0">
-				<h4 class="mui-pull-left section_title"><span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;"></span>公告</h4>
-				<router-link tag="a" to="/worktop/notice" class="mui-pull-right">更多</router-link>
-			</div> -->
-		<view class="section">
+		<view style="padding: 0 15px;">
+				<view class="matter font0">
+						<button type="primary" size="mini" class="mui-btn1 primary animated" :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理<uni-badge type="default" :text="dclAcount"></uni-badge></button>
+						<navigator url="../worktop/attendance/attendance">
+						<button type="danger"  size="mini" class="mui-btn1 danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤</button>
+						</navigator>
+				</view>
+			</view>
+			
+		<view class="">
 			<view class="section_head uni-flex">
 				<view class="section_title uni-flex-item">
 					<span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;">&#xe600;</span>
@@ -28,14 +24,8 @@
 				<navigator url="">更多</navigator>
 			</view>
 		<view class="uni-list">
-			<view class="uni-list-cell" hover-class="uni-list-cell-hover">
-				<view class="uni-list-cell-navigate">
-					Item2
-					<!-- <uni-badge text="1" type="danger"></uni-badge> -->
-				</view>
-			</view>
 			<view class="uni-list-cell" v-for="(item,index) in ggList" :key="index" hover-class="uni-list-cell-hover">
-				<view class="uni-list-cell-navigate uni-flex">
+				<view class="uni-list-cell-navigate uni-flex" @tap="toDetails(2,item.id)">
 					<view class="uni-flex-item uni-ellipsis">{{item.title}}</view> 
 					<text class="font12 c999">{{item.publishDate}}</text>
 				</view>
@@ -43,32 +33,11 @@
 		</view>
 		</view>
 		
-		<navigator url="../icon/icon">
+		<!-- <navigator url="../icon/icon">
 			<button type="primary" class="primary" size="mini">图标</button>
-		</navigator>
+		</navigator> -->
 		<!-- <button type="primary"@tap="goLogin">登录</button> -->
 			<button type="primary" class="primary" size="mini" @tap="clearUserInfo">清除缓存</button>
-		<!-- <view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<view>1122121</view><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/>
-		<p>1122121</p><br/><br/><br/> -->
-		<view class="">
-			<text class="title">{{title}}</text>
-		</view>
 	</view>
 </template>
 
@@ -182,6 +151,12 @@
 					this.ygList = res.data.data;
 				},(error)=> {
 				});
+			},
+			//跳转详情
+			toDetails(type,id){
+				uni.navigateTo({
+					url : '../worktop/notice_details/notice_details?type='+type+'&id='+id,
+				})
 			}
 		}
 	}
@@ -233,5 +208,11 @@
 .uni-list .uni-list-cell:after {
     background-color: #e1e0e2;
     height: 0;
+}
+.mui-btn1{
+	min-width: 50px;
+}
+.uni-list:after{
+	height: 0px;
 }
 </style>

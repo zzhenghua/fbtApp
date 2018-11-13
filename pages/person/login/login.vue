@@ -58,7 +58,7 @@
 				key: 'userInfo',
 				success: function (res) {
 					console.log("userInfo:"+res.data);
-					_this.getUserInfo({userInfo:res.data});
+					_this.getUserInfo({userInfo:JSON.parse(res.data)});
 					uni.reLaunch({
 						url:'../../index/index'
 					})
