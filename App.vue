@@ -1,5 +1,4 @@
 <script>
-	import util from "common/util.js"
 	
 	export default {
 		onLaunch: function () {
@@ -267,5 +266,14 @@
 		.section{
 			margin-top: 10px;
 			background: #FFFFFF;
+		}
+		.mask {
+			position: fixed;
+			z-index: 998;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			background-color: rgba(0, 0, 0, .3);
 		}
 </style>

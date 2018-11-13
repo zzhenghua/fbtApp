@@ -2,10 +2,7 @@
 	<section style="margin-top: 0;">
 		<div class="time_head uni-flex">
 			<span class="mui-icon mui-icon-back" @tap="prevMonth()"></span>
-			<picker class="picker-item uni-flex-item font16 c333" @change="selectTime" mode="date" start="2000-01-01" end="2050-01-01">
-				<view>{{currentText.year}}年{{currentText.month}}月</view>
-			</picker>
-			<!-- <div class="flexItem font16 c333"><span @tap="selectTime()">{{currentText.year}}年{{currentText.month}}月</span></div> -->
+			<div class="flexItem font16 c333"><span @tap="selectTime()">{{currentText.year}}年{{currentText.month}}月</span></div>
 			<span class="mui-icon mui-icon mui-icon-forward" @tap="nextMonth()"></span>
 		</div>
 		<ul class="time_day clearfix font12 c999">
@@ -60,14 +57,21 @@
 				require:false,
 				type:String,
 				default:'active'
+			},
+			currentText:{
+				require:false,
+				type:Object,
+				default:function(){
+					return {}
+				}
 			}
 		},
 		data() {
 			return {
-				currentText: {
-					year: new Date().getFullYear(),
-					month: new Date().getMonth() + 1
-				},
+// 				currentText: {
+// 					year: new Date().getFullYear(),
+// 					month: new Date().getMonth() + 1
+// 				},
 				daysArr: [], //日期列表
 				currentMonth: 11, //今天是几月份
 				time_animate: '', //时间控件动画 zoomIn\slideInLeft\slideInRight
@@ -90,10 +94,8 @@
 				//				this.time_animate = ' slideInRight';
 			},
 			//选择时间
-			selectTime(evt) {
-				let date = evt.detail.value;
-				this.currentText.year = date.split('-')[0];
-				this.currentText.month = date.split('-')[1];
+			selectTime() {
+				this.$emit('selectTime');
 				
 				
 // 				let _this = this,
@@ -190,11 +192,13 @@
 		},
 		watch:{
 			'currentText':function(){
+				debugger
 				if(this.currentText.year==todayYear&&this.currentText.month==todayMonth){
 					this.showBtn = true
 				}else{
 					this.showBtn = false
 				}
+				this.getMonthDay();
 			}
 		}
 	}

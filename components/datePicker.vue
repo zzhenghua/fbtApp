@@ -4,7 +4,7 @@
 		<!-- <view class="mask" v-show="showMask" @click="hide"></view> -->
 		<view class="uni-flex picker_head">
 			<view class="uni-flex-item tl"><text class="text" @tap="cancel">取消</text></view>
-			<button type="primary" class="mui-btn1 primary" style="margin:0;border-radius:4px;">确定</button>
+			<button type="primary" @tap="sureCallback" class="mui-btn1 primary" style="margin:0;border-radius:4px;">确定</button>
 		</view>
         <picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
             <picker-view-column>
@@ -65,9 +65,9 @@
                 months.push(i)
             }
 
-            for (let i = 1; i <= 31; i++) {
-                days.push(i)
-            }
+//             for (let i = 1; i <= 31; i++) {
+//                 days.push(i)
+//             }
 			
 			for (let i = 0; i <= 23; i++) {
 				hours.push(i)
@@ -85,7 +85,7 @@
                 year,
                 months,
                 month,
-                days,
+                // days,
                 day,
 				hours,
 				hour,
@@ -94,7 +94,7 @@
 				seconds,
 				second,
 				animate:false,
-                value: [ year, month - 1, day - 1, hour, minute, second],
+                // value: [ year, month - 1, day - 1, hour, minute, second],
 				/**
 				 * 解决动态设置indicator-style不生效的问题
 				 */
@@ -102,6 +102,22 @@
                 indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`
             }
         },
+		computed:{
+			days(){
+				let d = new Date(),days=[];
+				d.setFullYear(this.year);
+				d.setMonth(this.month);
+				d.setDate(1);
+				d.setDate(0);
+				for (let i = 1; i <= d.getDate(); i++) {
+					days.push(i)
+				}
+				return days;
+			},
+			value(){
+				return [ this.year-1990, this.month-1, this.day-1, this.hour, this.minute, this.second]
+			}
+		},
 		created() {
 			setTimeout(()=>{
 				this.animate = true;
@@ -110,17 +126,50 @@
         methods: {
             bindChange: function (e) {
                 const val = e.detail.value
+				console.log('val:'+val);
                 this.year = this.years[val[0]]
                 this.month = this.months[val[1]]
                 this.day = this.days[val[2]]
-                this.day = this.hours[val[3]]
-                this.day = this.minutes[val[4]]
-                this.day = this.seconds[val[5]]
+                this.hour = this.hours[val[3]]
+                this.minute = this.minutes[val[4]]
+                this.second = this.seconds[val[5]]
             },
 			//关闭
 			cancel(){
-				this.animate = false;
+				// this.animate = false;
 				this.$emit('hideDtPicker');
+			},
+			closeAnimate(){
+				this.animate = false;
+			},
+			//确定
+			sureCallback(){
+				let dateStr = '';
+				switch(this.dtMode){
+					case "year":
+					dateStr = (this.value[0]+1990);
+					break;
+					case "month":
+					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1);
+					break;
+					case "date":
+					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1);
+					break;
+					case "hour":
+					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
+								+' '+this.value[3];
+					break;
+					case "minute":
+					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
+								+' '+this.value[3]+':'+this.value[4];
+					break;
+					case "second":
+					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
+								+' '+this.value[3]+':'+this.value[4]+':'+this.value[5];
+					break;
+				}
+
+				this.$emit('sureDtPicker',dateStr);
 			}
         }
     }
@@ -152,7 +201,7 @@
 			background-color: #ffffff;
 			-webkit-box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
 			box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
-			transition: bottom .3s;
+			transition: bottom .2s;
 		}
 		.popup-middle {
 			width: 400upx;

@@ -1,6 +1,7 @@
 <template>
 	<view class="page">
-		<time-view @getSubmitShow="getSubmitShow" :activeDateList="labelDate" @getAjax="getLeaveStatistics" :activeClass="activeClass"></time-view>
+		
+		<time-view @getSubmitShow="getSubmitShow" :currentText="currentText" :activeDateList="labelDate" @getAjax="getLeaveStatistics" @selectTime="selectTime" :activeClass="activeClass"></time-view>
 		
 		<view class="">
 			<button type="primary" class="mui-btn1 primary" size="mini" @tap="dtMode='year';showDtPicker=true">year</button>
@@ -10,7 +11,9 @@
 			<button type="primary" class="mui-btn1 primary" size="mini" @tap="dtMode='minute';showDtPicker=true">minute</button>
 			<button type="primary" class="mui-btn1 primary" size="mini" @tap="dtMode='second';showDtPicker=true">second</button>
 		</view>
-		<date-picker :dtMode="dtMode" v-if="showDtPicker" @hideDtPicker="hideDtPicker"></date-picker>
+		
+		<view class="mask" v-show="showDtPicker" @click="hideDtPicker"></view>
+		<date-picker ref="dtPicker" :dtMode="dtMode" v-if="showDtPicker" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 		
 	</view>
 </template>
@@ -38,7 +41,11 @@
 				leaveStatistics:{},//请假数据
 				checkRecords:{},//考勤数据
 				dtMode:'',
-				showDtPicker:false
+				showDtPicker:false,
+				currentText: {
+					year: new Date().getFullYear(),
+					month: new Date().getMonth() + 1
+				},
 			};
 		},
 		computed:{
@@ -65,10 +72,23 @@
 			datePicker
 		},
 		methods:{
+			//选择日期
+			selectTime(){
+				this.dtMode='month';
+				this.showDtPicker=true;
+			},
+			//取消
 			hideDtPicker(){
+				this.$refs.dtPicker.closeAnimate();
 				setTimeout(()=>{
 					this.showDtPicker = false;
-				},500)
+				},200)
+			},
+			//确定
+			sureDtPicker(value){
+				this.currentText.year = value.split('-')[0];
+				this.currentText.month = value.split('-')[1];
+				this.hideDtPicker();
 			},
 			submiteForm:function(submiteBtn){
 				let _this = this;
