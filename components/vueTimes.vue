@@ -1,9 +1,9 @@
 <template>
 	<section style="margin-top: 0;">
 		<div class="time_head uni-flex">
-			<span class="mui-icon mui-icon-back" @tap="prevMonth()"></span>
-			<div class="flexItem font16 c333"><span @tap="selectTime()">{{currentText.year}}年{{currentText.month}}月</span></div>
-			<span class="mui-icon mui-icon mui-icon-forward" @tap="nextMonth()"></span>
+			<icon class="uni-icon uni-icon-back" @tap="prevMonth()"></icon>
+			<div class="uni-flex-item font16 c333"><text @tap="selectTime()">{{currentText.year}}年{{currentText.month}}月</text></div>
+			<icon class="uni-icon uni-icon-forward" @tap="nextMonth()"></icon>
 		</div>
 		<ul class="time_day clearfix font12 c999">
 			<li class="">日</li>
@@ -15,8 +15,8 @@
 			<li class="">六</li>
 		</ul>
 		<ul class="time_day clearfix animated" :class="time_animate">
-			<li v-for="(item,$index) in daysArr" :key="$index">
-				<a href="javascript:void(0)" :class="{[item.className]:true,[activeClass]:activeDateList.indexOf(item.ymd)>-1}" :data-day="item.day" :data-ymd="item.ymd">{{item.date}}</a>
+			<li v-for="(item,$index) in daysArr2" :key="$index">
+				<text class="a" :class="[item.className,item.bgClass]" :data-day="item.day" :data-ymd="item.ymd">{{item.date}}</text>
 			</li>
 			<!--<li><a href="javascript:void(0)" class="c999">26</a></li>
 			 			<li><a href="javascript:void(0)" class="c999">26</a></li>
@@ -75,6 +75,20 @@
 				daysArr: [], //日期列表
 				currentMonth: 11, //今天是几月份
 				time_animate: '', //时间控件动画 zoomIn\slideInLeft\slideInRight
+			}
+		},
+		computed:{
+			daysArr2(){
+				let _this = this,arr=this.$util.copyArr(this.daysArr),item;
+				for(let i=0;i<arr.length;i++){
+					item = arr[i];
+					if(_this.activeDateList.indexOf(item.ymd)>-1){
+						item.bgClass = _this.activeClass
+					}else{
+						item.bgClass = ''
+					}
+				}
+				return arr
 			}
 		},
 		created() {
@@ -177,7 +191,7 @@
 					this.$emit('getSubmitShow',false);
 				}
 				
-				// this.$emit('getAjax',this.currentText.year+'-'+(this.currentText.month<10?'0'+this.currentText.month:this.currentText.month),true);
+				this.$emit('getAjax',this.currentText.year+'-'+(this.currentText.month<10?'0'+this.currentText.month:this.currentText.month),true);
 			}
 		},
 		filters:{
@@ -192,7 +206,6 @@
 		},
 		watch:{
 			'currentText':function(){
-				debugger
 				if(this.currentText.year==todayYear&&this.currentText.month==todayMonth){
 					this.showBtn = true
 				}else{
@@ -214,7 +227,7 @@ section .time_head {
   text-align: center;
   padding: 0 15px;
 }
-section .time_head .mui-icon {
+section .time_head .uni-icon {
   color: #0093dd;
 }
 section .time_week, section .time_day {
@@ -230,7 +243,7 @@ section .time_day > li {
   width: 14%;
   padding: 2px 0;
 }
-section .time_day > li > a {
+section .time_day > li > .a {
   height: 32px;
   display: block;
   width: 32px;
@@ -242,12 +255,12 @@ section .time_day > li > a {
   /*background: #0093DD;
   color: #FFF;*/
 }
-section .time_day > li > a.active {
+section .time_day > li > .a.active {
   background: #0093DD;
   color: #FFF;
 }
 
-.mui-badge-danger {
+.a.uni-badge-danger {
   border: none;
   color: #FFFFFF;
 }

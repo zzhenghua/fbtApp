@@ -8,10 +8,10 @@
 		</swiper>
 		<view style="padding: 0 15px;">
 				<view class="matter font0">
-						<button type="primary" size="mini" class="mui-btn1 primary animated" :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理<uni-badge type="default" :text="dclAcount"></uni-badge></button>
-						<navigator url="../worktop/attendance/attendance">
-						<button type="danger"  size="mini" class="mui-btn1 danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤</button>
-						</navigator>
+					<block v-for="item in menuList" :key="item.id">
+							<button type="primary" v-if="item.id==156" size="mini" class="mui-btn1 primary animated" :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理<uni-badge type="default" :text="dclAcount"></uni-badge></button>
+							<button type="danger"  v-if="item.id==155" @tap="openPage('../worktop/attendance/attendance')" size="mini" class="mui-btn1 danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤</button>
+					</block>
 				</view>
 			</view>
 			
@@ -21,7 +21,7 @@
 					<span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;">&#xe600;</span>
 					<text class="bold">公告</text>
 				</view>
-				<navigator url="">更多</navigator>
+				<navigator url="../worktop/notice/notice" class="link">更多</navigator>
 			</view>
 		<view class="uni-list">
 			<view class="uni-list-cell" v-for="(item,index) in ggList" :key="index" hover-class="uni-list-cell-hover">
@@ -37,7 +37,7 @@
 			<button type="primary" class="primary" size="mini">图标</button>
 		</navigator> -->
 		<!-- <button type="primary"@tap="goLogin">登录</button> -->
-			<button type="primary" class="primary" size="mini" @tap="clearUserInfo">清除缓存</button>
+			<!-- <button type="primary" class="primary" size="mini" @tap="clearUserInfo">清除缓存</button> -->
 	</view>
 </template>
 
@@ -156,6 +156,11 @@
 			toDetails(type,id){
 				uni.navigateTo({
 					url : '../worktop/notice_details/notice_details?type='+type+'&id='+id,
+				})
+			},
+			openPage(url){
+				uni.navigateTo({
+					url:url
 				})
 			}
 		}

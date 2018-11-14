@@ -17,12 +17,14 @@
 	
 	<view class="uni-list section">
 		<view class="uni-list-cell">
+			<navigator url="setting/setting" class="block-link">
 			<view class="uni-list-cell-navigate c333" hover-class="uni-list-cell-hover">
 				<view class="">
 					<icon class="iconfont icon-shezhi">&#xe7a0;</icon>
 					设置
-				</view>
+					</view>
 			</view>
+			</navigator>
 		</view>
 	</view>
 	

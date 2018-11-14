@@ -26,6 +26,7 @@
 <style>
 	/* 这是页面的公用css */
 		@import "./common/uni.css";
+		@import "./common/icon.css";
 		@import "./common/main.css";
 		@import "./common/animate.css";
 		
@@ -275,5 +276,21 @@
 			bottom: 0;
 			left: 0;
 			background-color: rgba(0, 0, 0, .3);
+		}
+		.link{
+			color: #0093DD;
+		}
+		.uni-ellipsis-2 {
+			display: -webkit-box;
+			overflow: hidden;
+			white-space: normal!important;
+			text-overflow: ellipsis;
+			word-wrap: break-word;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+		.block-link{
+			width: 100%;
+			display: block;
 		}
 </style>

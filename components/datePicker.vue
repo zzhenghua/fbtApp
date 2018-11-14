@@ -144,31 +144,42 @@
 			},
 			//确定
 			sureCallback(){
-				let dateStr = '';
+				let dateStr = '',
+					y = this.value[0]+1990,
+					m = this.value[1]+1,
+					d = this.value[2]+1,
+					H = this.value[3],
+					M = this.value[4],
+					S = this.value[5];
+					
+					m = m<10?('0'+m):m;
+					d = d<10?('0'+d):d;
+					H = H<10?('0'+H):H;
+					M = M<10?('0'+M):M;
+					S = S<10?('0'+S):S;
 				switch(this.dtMode){
 					case "year":
-					dateStr = (this.value[0]+1990);
+					dateStr = y;
 					break;
 					case "month":
-					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1);
+					dateStr = y+'-'+m;
 					break;
 					case "date":
-					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1);
+					dateStr = y+'-'+m+'-'+d;
 					break;
 					case "hour":
-					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
-								+' '+this.value[3];
+					dateStr = y+'-'+m+'-'+d
+								+' '+H;
 					break;
 					case "minute":
-					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
-								+' '+this.value[3]+':'+this.value[4];
+					dateStr = y+'-'+m+'-'+d
+								+' '+H+':'+M;
 					break;
 					case "second":
-					dateStr = (this.value[0]+1990)+'-'+(this.value[1]+1)+'-'+(this.value[2]+1)
-								+' '+this.value[3]+':'+this.value[4]+':'+this.value[5];
+					dateStr = y+'-'+m+'-'+d
+								+' '+H+':'+M+':'+S;
 					break;
 				}
-
 				this.$emit('sureDtPicker',dateStr);
 			}
         }
@@ -187,13 +198,16 @@
     }
 	
 	.picker_head{
-		padding: 12upx;
+		padding: 12upx 20upx;
 		height: 60upx;
 		border-bottom: 1px solid #DDDDDD;
 	}
 	.picker_head .text{
 		line-height:60rpx;
 		font-size:32rpx;
+	}
+	.picker_head .mui-btn1{
+		line-height:60rpx;
 	}
 	.popup {
 			position: absolute;

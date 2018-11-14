@@ -28,7 +28,7 @@
 		line-height: 1;
 		display: inline-block;
 		padding: 3px 6px;
-		color: #333;
+		color: #FFFFFF;
 		border-radius: 100px;
 	}
 	.uni-badge.uni-badge-inverted {

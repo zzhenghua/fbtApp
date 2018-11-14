@@ -177,10 +177,6 @@
 		padding: 20px;
 	}
 
-	button.primary {
-		background-color: #0faeff;
-	}
-
 	.action-row {
 		width: 100%;
 		text-align: center;

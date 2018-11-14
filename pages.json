@@ -105,7 +105,9 @@
         },
         {
             "path" : "pages/worktop/notice/notice",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText" : "公告列表"
+			}
         },
         {
             "path" : "pages/worktop/notice_details/notice_details",
@@ -116,7 +118,13 @@
         {
             "path" : "pages/worktop/attendance/attendance",
             "style" : {
-				"navigationBarTitleText" : "考勤"
+                "navigationBarTitleText" : "考勤"
+            }
+        },
+        {
+            "path" : "pages/person/setting/setting",
+            "style" : {
+				"navigationBarTitleText" : "设置"
 			}
         }
     ],

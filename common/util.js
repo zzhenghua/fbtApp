@@ -66,8 +66,38 @@ var dateUtils = {
 	}
 };
 
+//深度复制数组
+const copyArr = (arr)=>{
+	return arr.map((e)=>{
+            if(typeof e === 'object'){
+                return Object.assign({},e)
+            }else{
+                return e
+            }
+        })
+}
+
+//是否为json数据
+const isJSON = (str)=>{
+    if (typeof str == 'string') {
+        try {
+            var obj=JSON.parse(str);
+            if(typeof obj == 'object' && obj ){
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch(e) {
+            return false;
+        }
+    }
+}
+
 module.exports = {
 	formatTime: formatTime,
 	formatLocation: formatLocation,
-	dateUtils: dateUtils
+	dateUtils: dateUtils,
+	copyArr:copyArr,
+	isJSON:isJSON
 }

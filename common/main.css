@@ -179,3 +179,15 @@ body {
 	color: #CCCCCC;
 	opacity: 1;
 }
+
+[v-cloak] {
+
+     display: none;
+
+}
+.marginTop10{
+	margin-top: 10px;
+}
+.paddingTop10{
+	padding-top: 10px;
+}
