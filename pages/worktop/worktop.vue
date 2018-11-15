@@ -9,7 +9,7 @@
 			</view> -->
 			
 			<view v-for="(item,$index) in menuList" :key="item.seq" class="uni-grid-9-item tc" hover-class="uni-grid-9-item-hover">
-				<view class="iconBox" :style="{background:item.background}">
+				<view class="iconBox" :style="{background:item.background}" @tap="goPage(item.to)">
 					<icon v-if="item.id==155" class="iconfont" :class="item.icon">&#xe6ae;</icon>
 					<icon v-else-if="item.id==156" class="iconfont" :class="item.icon">&#xe670;</icon>
 					<icon v-else-if="item.id==157" class="iconfont" :class="item.icon">&#xe600;</icon>
@@ -140,6 +140,11 @@
 				},(error)=> {
 					this.requestStatus = 2;
 				});
+			},
+			goPage(u){
+				uni.navigateTo({
+					url:u+'/'+u
+				})
 			}
 		}
 	}

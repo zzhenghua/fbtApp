@@ -262,7 +262,7 @@
 			padding:0px 8px !important;
 			font-size: 13px;
 			border-radius: 10px;
-			margin-right: 5px;
+			margin: 0 5px 0 0;
 		}
 		.section{
 			margin-top: 10px;

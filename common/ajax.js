@@ -31,12 +31,17 @@ const requst = function(type,url,data,successBack,errorBack,completeBack){
 				}
         //this.text = 'request success';
 		},
-		fail: ()=>{
+		fail: (err)=>{
+			console.log('err:'+JSON.stringify(err))
+			uni.showToast({
+				icon:'none',
+				title:'请求失败！'
+			})
 			// errorBack();
 		},
 		complete: (res) => {
 			uni.hideLoading();
-			// console.log(JSON.stringify(res))
+			// console.log('complete:'+JSON.stringify(res))
 			completeBack?completeBack():''
 		}
 	});

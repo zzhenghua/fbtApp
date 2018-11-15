@@ -7,7 +7,7 @@
 			</swiper-item>
 		</swiper>
 		<view style="padding: 0 15px;">
-				<view class="matter font0">
+				<view class="matter font0 uni-flex">
 					<block v-for="item in menuList" :key="item.id">
 							<button type="primary" v-if="item.id==156" size="mini" class="mui-btn1 primary animated" :class="{fadeInRight:animate}" style="animation-delay: 0.5s;">待处理<uni-badge type="default" :text="dclAcount"></uni-badge></button>
 							<button type="danger"  v-if="item.id==155" @tap="openPage('../worktop/attendance/attendance')" size="mini" class="mui-btn1 danger animated" :class="{fadeInRight:animate}" style="animation-delay: 0.8s;"> 考勤</button>
@@ -219,5 +219,9 @@
 }
 .uni-list:after{
 	height: 0px;
+}
+.matter{
+	height: 96upx;
+	align-items: center;
 }
 </style>

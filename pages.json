@@ -106,8 +106,8 @@
         {
             "path" : "pages/worktop/notice/notice",
             "style" : {
-				"navigationBarTitleText" : "公告列表"
-			}
+                "navigationBarTitleText" : "公告列表"
+            }
         },
         {
             "path" : "pages/worktop/notice_details/notice_details",
@@ -124,7 +124,37 @@
         {
             "path" : "pages/person/setting/setting",
             "style" : {
-				"navigationBarTitleText" : "设置"
+                "navigationBarTitleText" : "设置"
+            }
+        },
+        {
+            "path" : "pages/person/userInfo/userInfo",
+            "style" : {
+                "navigationBarTitleText" : "个人信息"
+            }
+        },
+        {
+            "path" : "pages/person/crop/crop",
+            "style" : {
+                "navigationBarTitleText" : "头像修改"
+            }
+        },
+        {
+            "path" : "pages/worktop/clock/clock",
+            "style" : {
+				"navigationBarTitleText" : "加班打卡",
+				"app-plus" : {
+					"titleNView" : {
+						"buttons" : [
+							{
+								"text" : "\ue612",
+								"fontSrc" : "/static/iconfont.ttf",
+								"fontSize" : "24px",
+								"color" : "#FFFFFF"
+							}
+						]
+					}
+				}
 			}
         }
     ],

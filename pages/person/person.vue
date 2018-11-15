@@ -1,19 +1,23 @@
 <template>
 	<view class="page">
-	
-	<view class="uni-list ">
-		<view class="uni-list-cell">
-			<view class="uni-list-cell-navigate uni-flex" style="justify-content: center;padding: 15px;">
-				<view class="imgBox">
-					 <image class="userImg" :src="userInfo.picture||photo"></image>
+	<view class="paddingTop10">
+		<view class="uni-list ">
+			<view class="uni-list-cell">
+				<navigator url="userInfo/userInfo" class="block-link">
+				<view class="uni-list-cell-navigate uni-flex" style="justify-content: center;padding: 15px;">
+					<view class="imgBox">
+						<image class="userImg" :src="userInfo.picture||photo"></image>
+					</view>
+					<view class="uni-flex-item">
+						<view>{{userInfo.cname}}</view>
+						<text>{{userInfo.loginName}}</text>
+					</view>
 				</view>
-				<view class="uni-flex-item">
-					<view>{{userInfo.cname}}</view>
-					<text>{{userInfo.loginName}}</text>
-				</view>
+				</navigator>
 			</view>
 		</view>
 	</view>
+	
 	
 	<view class="uni-list section">
 		<view class="uni-list-cell">
@@ -49,11 +53,6 @@
 // 					
 // 				},
 				photo:'./../../static/img2.jpg',
-				list:[{
-					title:'1212',
-					img:'./../../static/img2.jpg',
-					content:'contentcontentcontentcontent'
-				}]
 			};
 		},
 		computed:{
