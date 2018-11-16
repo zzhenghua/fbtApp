@@ -6,7 +6,7 @@
 			<view class="uni-flex-item tl"><text class="text" @tap="cancel">取消</text></view>
 			<button type="primary" @tap="sureCallback" class="mui-btn1 primary" style="margin:0;border-radius:4px;">确定</button>
 		</view>
-        <picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
+        <picker-view v-if="visible" indicator-style="height: 40px;" :value="value" @change="bindChange">
             <picker-view-column>
                 <view class="item" v-if="dtMode" v-for="(item,index) in years" :key="index">{{item}}年</view>
             </picker-view-column>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+	
     export default {
 		props:{
 			dtMode:{
@@ -39,8 +40,11 @@
 			show:{
 				type:Boolean,
 				default:false
+			},
+			time:{//默认日期
+				type:String,
+				default:''
 			}
-			
 		},
         data: function () {
             const date = new Date()
@@ -50,13 +54,14 @@
             const month = date.getMonth() + 1
             const days = []
             const day = date.getDate()
-			const hours = []
-			const hour = date.getHours()
-			const minutes = []
-			const minute = date.getMinutes()
-			const seconds = []
-			const second = date.getSeconds()
-
+						
+						const hours = []
+						const hour = date.getHours()
+						const minutes = []
+						const minute = date.getMinutes()
+						const seconds = []
+						const second = date.getSeconds()
+				
             for (let i = 1990; i <= 2030; i++) {
                 years.push(i)
             }
@@ -99,7 +104,7 @@
 				 * 解决动态设置indicator-style不生效的问题
 				 */
                 visible: true,
-                indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`
+                // indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`
             }
         },
 		computed:{
@@ -193,7 +198,7 @@
     }
 
     .item {
-        line-height: 100upx;
+        line-height: 40px;
         text-align: center;
     }
 	
@@ -215,7 +220,7 @@
 			background-color: #ffffff;
 			-webkit-box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
 			box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
-			transition: bottom .2s;
+			transition:  all ease 0.3s;
 		}
 		.popup-middle {
 			width: 400upx;
@@ -231,30 +236,32 @@
 		.popup-top {
 			top: 0;
 			width: 100%;
-			height: 100upx;
+			height: 80upx;
 			text-align: center;
 		}
 	
 		.popup-top text {
-			line-height: 100upx;
+			line-height: 80upx;
 			margin-left: 20upx;
 			font-size: 32upx;
 		}
 	
 		.popup-bottom {
-			bottom: -600upx;
+			bottom: 0;
 			width: 100%;
 			height: 600upx;
 			text-align: center;
+			transform: translateY(100%);
 		}
 		
 		.popup-bottom.animate{
-			bottom: 0;
+			transform: translateY(0);
 		}
 	
 		.popup-bottom text {
-			line-height: 100upx;
+			line-height: 80upx;
 			font-size: 32upx;
+			color: #888888;
 		}
 	
 		.popup .list-view {

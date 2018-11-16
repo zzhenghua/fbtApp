@@ -142,20 +142,26 @@
         {
             "path" : "pages/worktop/clock/clock",
             "style" : {
-				"navigationBarTitleText" : "加班打卡",
-				"app-plus" : {
-					"titleNView" : {
-						"buttons" : [
-							{
-								"text" : "\ue612",
-								"fontSrc" : "/static/iconfont.ttf",
-								"fontSize" : "24px",
-								"color" : "#FFFFFF"
-							}
-						]
-					}
-				}
-			}
+                "navigationBarTitleText" : "加班打卡",
+                "app-plus" : {
+                    "titleNView" : {
+                        "buttons" : [
+                            {
+                                "text" : "\ue612",
+                                "fontSrc" : "/static/iconfont.ttf",
+                                "fontSize" : "24px",
+                                "color" : "#FFFFFF"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path" : "pages/worktop/clock_reposition/clock_reposition",
+            "style" : {
+							"navigationBarTitleText" : "重新定位"
+						}
         }
     ],
     "globalStyle" : {

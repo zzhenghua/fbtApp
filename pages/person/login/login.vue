@@ -119,6 +119,7 @@
 	.img {
 		max-width: 190px;
 		width: 50%;
+		height: auto;
 		margin: 20% 0 12%;
 	}
 

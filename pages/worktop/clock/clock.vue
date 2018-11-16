@@ -14,9 +14,11 @@
 					<text class="cccc">{{time1}}</text>
 				</view>
 				<view class="current uni-flex">
-					<icon class="iconfont uni-icon font20" style="color: #f0ad4e;">&#xe656;</icon>
-					<text>定位信息获取中...</text>
-					<navigator url="" class="link">去重新定位</navigator>
+					<icon class="iconfont uni-icon font20 green" style="margin-top: -3px;color:#f0ad4e;" :style="{color: clockRange.effective?'#1AAD19':'#f0ad4e'}">&#xe656;</icon>
+					<text v-if="!userLocation.longitude">定位信息获取中...</text>
+					<text v-else-if="clockRange.effective">已进入考勤范围内</text>
+					<text v-else>不在考勤范围内</text>
+					<text class="link"  @tap="openRepostion">去重新定位</text>
 				</view>
 			</view>
 			
@@ -34,12 +36,13 @@
 				</view>
 			</view>
 		</view>
+		<map-view v-if="this.workInfo.workList" @getEffective="getEffective" :userLocation="userLocation" :workInfo="workInfo"  :effective="clockRange.effective"></map-view>
 	</view>
-	
 </template>
 
 <script>
-	import { mapState } from 'vuex'
+	import { mapState,mapMutations } from 'vuex'
+	import mapView from '../../../components/map.vue'
 	export default {
 		data() {
 			return {
@@ -49,14 +52,14 @@
 				list:[],
 				overData:false,
 				page:0,
-				effective1:false,//是否在考勤范围内
+				// effective1:false,//是否在考勤范围内
 				showReposition:false,
 				mapStutas:true,
 				workInfo:{range:80},
 			};
 		},
 		computed:{
-			...mapState(['userInfo']),
+			...mapState(['userInfo','clockRange']),
 			time1(){
 				return this.time.split(' ')[1]
 			}
@@ -64,10 +67,11 @@
 		onLoad(){
 			this.getTime();
 			setTimeout(function(){
+				this.getUserLocation();
 				this.searchClockHistory();
-// 				this.getUserMacId();
-// 				this.getWorkAddress();
-// 				this.getAddressRange();
+				this.getUserMacId();
+				this.getWorkAddress();
+				this.getAddressRange();
 			}.bind(this),1100)
 		},
 		onNavigationBarButtonTap(e){
@@ -75,42 +79,40 @@
 				content:"<h1>1111</h1>"
 			})
 		},
+		components:{
+			mapView
+		},
 		methods:{
+			...mapMutations(['setClockRange']),
 			//获取手机定位
 			getUserLocation(){
 				let _this = this;
-				mui.plusReady(function(){
-					plus.geolocation.getCurrentPosition(function(p){
-						_this.userLocation = p;
-//						alert('Geolocation\nLatitude:' + p.coords.latitude + '\nLongitude:' + p.coords.longitude + '\nAltitude:' + p.coords.altitude);
-					}, function(e){
-//						_this.errorInfo = e.message;
-//						alert('Geolocation error: ' + e.message);
-						mui.toast(e.message);
-					} );
-				})
+				uni.getLocation({
+					type: 'wgs84',
+					success: function (res) {
+						_this.userLocation = res;
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+					}
+				});
 			},
 			//获取手机mac地址
 			getUserMacId(){
 				let uuid,_this = this;
-				mui.plusReady(function(){
-//					uuid=plus.device.imei;
-//					if(uuid.length<5){
-//						uuid = plus.device.uuid;
-//					}
-//					uuid = plus.device.uuid;
-					_this.userMacId = plus.device.uuid;
-				});
-				
+				// #ifdef APP-PLUS
+				_this.userMacId = plus.device.uuid;
+				// #endif
 			},
 			//获取上班地址
 			getWorkAddress(){
 //				this.$util.showWaiting();
 				this.$ajax.post(this.$path.CLOCKWORKADDRESS,{
 					empNo: this.userInfo.loginName,
-				}).then((res)=>{
-					this.workInfo = mui.extend(this.workInfo,{workList:res.data});
-				}).catch((error)=> {
+					token: this.userInfo.token,
+				},(res)=>{
+					Object.assign(this.workInfo, {workList:res.data});
+					// this.workInfo = uni.extend(this.workInfo,{workList:res.data});
+				},(error)=> {
 				});
 			},
 			//获取打卡有效范围
@@ -118,9 +120,9 @@
 //				this.$util.showWaiting();
 				this.$ajax.post(this.$path.CLOCKADDRESSRANGE,{
 					
-				}).then((res)=>{
+				},(res)=>{
 					this.workInfo.range = res.data.value;
-				}).catch((error)=> {
+				},(error)=> {
 				});
 			},
 			//倒计时
@@ -139,7 +141,6 @@
 			//打卡
 			punchClock(){
 				console.log('userMacId:'+this.userMacId);
-				console.log('addresses:'+this.userLocation.addresses);
 //				this.userMacId='0123456789';
 //				this.userLocation.addresses='深圳市卫星大厦';
 				let list = this.workInfo.workList,noGps=false;
@@ -155,10 +156,10 @@
 				if(!noGps){
 					return mui.confirm('<span style="color:#ad372e">该办公地址未定位，无法打卡</span>','提示',['确认'],function(){},'div');
 				}
-				if(!(this.userMacId&&this.userLocation.addresses)){
+				if(!(this.userMacId&&this.userLocation.longitude)){
 					return mui.confirm('<span style="color:#ad372e">手机定位失败，无法打卡</span>','提示',['确认'],function(){},'div');
 				}
-				if(!this.effective1){
+				if(!this.clockRange.effective){
 					return mui.confirm('<span style="color:#ad372e">不在考勤范围内，无法打卡!</span>','提示',['确认'],function(){},'div');
 				}
 				let _this = this;
@@ -173,17 +174,21 @@
 				this.$util.showWaiting();
 				this.$ajax.post(this.$path.CLOCKRECORDADD,{
 					empNo: this.userInfo.loginName,
+					token: this.userInfo.token,
 					employeeName:this.userInfo.cname,
 					imei:this.userMacId,
 					clockTime:this.time,
 					clockAddress:this.workInfo.workList[this.workInfo.activeIndex].address,
 					clockLongitude:this.userLocation.longitude.toString(),
 					clockLatitude:this.userLocation.latitude.toString()
-				}).then((res)=>{
-					mui.toast(res.message);
+				},(res)=>{
+					uni.showToast({
+						icon:"none",
+						title:"res.message"
+					})
 					this.initVar();
 					this.searchClockHistory();
-				}).catch((error)=> {
+				},(error)=> {
 				});
 			},
 			initVar(){
@@ -217,15 +222,22 @@
 				`<p class="tl">1、注意手机需要开启法本通定位权限，否则可导致不能获取位置信息</p><p class="tl">2、定位不准可重新定位，但定位地址不能修改</p><p class="tl">3、若有数据异常等问题请联系对应员工关系处理</p>`,'提示',['确定'],function(){},'div')
 			},
 			getEffective(ob){
-				console.log(666666666666)
-				this.effective1 = ob.effective;
+				console.log(666666666666+JSON.stringify(ob))
+				this.setClockRange({clockRange:{
+					effective:ob.effective,
+					activeIndex:ob.activeIndex
+				}})
+				// this.effective1 = ob.effective;
 				this.workInfo.activeIndex = ob.activeIndex;
 				
 			},
 			openRepostion(){
 				let list = this.workInfo.workList,noGps=false;
 				if(!list){
-					return mui.toast('该员工没有维护工作地点');
+					return uni.showToast({
+						icon:"none",
+						title:"该员工没有维护工作地点"
+					})
 				}
 				for(let i=0;i<list.length;i++){
 					if(list[i].longitude){
@@ -234,9 +246,14 @@
 					}
 				}
 				if(!noGps){
-					return mui.toast('该办公地址未定位');
+					return uni.showToast({
+						icon:"none",
+						title:"该办公地址未定位"
+					})
 				}else{
-					this.showReposition = true;
+					uni.navigateTo({
+						url:"../clock_reposition/clock_reposition?workInfo="+JSON.stringify(this.workInfo)
+					})
 				}
 				
 //				this.$refs.reposition.showMap();
@@ -281,21 +298,27 @@
 	align-items: center;
 }
 .clockHistory{
-	padding: 10px;
+	padding: 10px 15px;
 }
 .dkRecord {
     margin-top: 10px;
     background: #f5f5f5;
     border-radius: 6px;
     padding: 5px;
-	color: #999999;
+	color: #888;
+	line-height: 1.2;
 }
 .dkRecord .iconfont{
-	vertical-align: middle;
-	font-size: 22px;
-	padding-bottom: 5px;
+	vertical-align:middle;
+	font-size:20px;
+	line-height:1.2;
+	margin-top:-3px;
 }
 .dkRecord .text{
-	margin-top: -10px;
+	margin-top: -5px;
 }
+.green{
+	color:#1AAD19;
+}
+
 </style>

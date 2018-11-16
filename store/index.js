@@ -5,11 +5,18 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        userInfo: ""//用户信息
+        userInfo: "",//用户信息
+		clockRange:{
+			effective:false,//是否在打卡范围内
+			activeIndex:''//打卡地址index
+		}
     },
     mutations: {
         getUserInfo(state,payload){
 			state.userInfo = payload.userInfo
+		},
+		setClockRange(state,payload){
+			state.clockRange = payload.clockRange
 		}
     }
 })

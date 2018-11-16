@@ -36,6 +36,7 @@
 			height: 100%;
 			font-size: 32upx;
 			line-height: 1.6;
+			color: #666;
 		}
 	
 		checkbox,
