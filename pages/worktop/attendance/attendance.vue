@@ -138,6 +138,12 @@
 			//vueTimes.vue组件已经执行此方法
 			//this.getLeaveStatistics(this.currentDate.year+'-'+this.currentDate.month);
 		},
+		onBackPress() {
+			if(this.showDtPicker) {
+				this.hideDtPicker();
+				return true;
+			}
+		},
 		methods:{
 			//选择日期
 			selectTime(){

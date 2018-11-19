@@ -1,9 +1,14 @@
 <template>
 	<view class="page">
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
-			<swiper-item v-for="item in testImgs" :key="item" >
+			<!-- <swiper-item v-for="item in testImgs" :key="item" >
 				<image class="swiper-item" :src="item" mode="widthFix"></image>
-				<!-- <view class="swiper-item"><image :src="item" mode="widthFix"></image></view> -->
+			</swiper-item> -->
+			<swiper-item>
+				<image class="swiper-item" src="./../../static/img1.png" mode="widthFix"></image>
+			</swiper-item>
+			<swiper-item>
+				<image class="swiper-item" src="./../../static/img1_1.png" mode="widthFix"></image>
 			</swiper-item>
 		</swiper>
 		<view style="padding: 0 15px;">

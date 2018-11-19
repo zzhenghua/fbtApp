@@ -9,7 +9,7 @@
 				<navigator url="" class="link">历史查询</navigator>
 			</view>
 			<view class="uni-content-info">
-				<view class="radius">
+				<view class="radius" @tap="punchClock">
 					<view class="dk">加班打卡</view>
 					<text class="cccc">{{time1}}</text>
 				</view>
@@ -36,13 +36,29 @@
 				</view>
 			</view>
 		</view>
+		
 		<map-view v-if="this.workInfo.workList" @getEffective="getEffective" :userLocation="userLocation" :workInfo="workInfo"  :effective="clockRange.effective"></map-view>
+		
+		<popup-alert v-if="showPopupAlert" :showPopup="showPopupAlert" @buttonEvents="alertPopupButtonEvents">
+			<view class=""  style="width: 500upx;">
+				<view v-html="popupAlertContent"></view>
+			</view>
+		</popup-alert>
+		
+		<!-- <popup-confirm v-if="showPopupConfirm" :showPopup="showPopupConfirm" @buttonEvents="confirmPopupButtonEvents">
+			<view class=""  style="width: 500upx;">
+				<view v-html="popupConfirmContent"></view>
+			</view>
+		</popup-confirm> -->
+		
 	</view>
 </template>
 
 <script>
 	import { mapState,mapMutations } from 'vuex'
 	import mapView from '../../../components/map.vue'
+	import popupConfirm from '../../../components/popup-confirm.vue'
+	import popupAlert from '../../../components/popup-alert.vue'
 	export default {
 		data() {
 			return {
@@ -56,6 +72,10 @@
 				showReposition:false,
 				mapStutas:true,
 				workInfo:{range:80},
+				showPopupAlert:false,//alert弹框
+				popupAlertContent:'',//alert弹框内容
+				showPopupConfirm:false,//Confirm弹框
+				popupConfirmContent:''//Confirm弹框内容
 			};
 		},
 		computed:{
@@ -75,12 +95,26 @@
 			}.bind(this),1100)
 		},
 		onNavigationBarButtonTap(e){
-			uni.showModal({
-				content:"<h1>1111</h1>"
-			})
+			this.popupAlertContent = `
+			<div style="line-height: 2; font-size: 16px;text-align: center;font-weight: bold;">
+				提示
+			</div>
+			<p style="padding-bottom: 5px;">1、注意手机需要开启法本通定位权限，否则可导致不能获取位置信息</p>
+			<p style="padding-bottom: 5px;">2、定位不准可重新定位，但定位地址不能修改</p>
+			<p style="padding-bottom: 5px;">3、若有数据异常等问题请联系对应员工关系处理</p>
+			`;
+			this.showPopupAlert = true;
+		},
+		onBackPress() {
+			if(this.showPopupAlert) {
+				this.showPopupAlert = false;
+				return true;
+			}
 		},
 		components:{
-			mapView
+			mapView,
+			popupConfirm,
+			popupAlert
 		},
 		methods:{
 			...mapMutations(['setClockRange']),
@@ -145,7 +179,9 @@
 //				this.userLocation.addresses='深圳市卫星大厦';
 				let list = this.workInfo.workList,noGps=false;
 				if(!list){
-					return mui.confirm('<span style="color:#ad372e">该员工没有维护工作地点，无法打卡</span>','提示',['确认'],function(){},'div');
+					this.showPopupAlert = true;
+					this.popupAlertContent = "该员工没有维护工作地点，无法打卡"
+					return false;
 				}
 				for(let i=0;i<list.length;i++){
 					if(list[i].longitude){
@@ -154,24 +190,45 @@
 					}
 				}
 				if(!noGps){
-					return mui.confirm('<span style="color:#ad372e">该办公地址未定位，无法打卡</span>','提示',['确认'],function(){},'div');
+					this.showPopupAlert = true;
+					this.popupAlertContent = "该办公地址未定位，无法打卡"
+					return false;
 				}
 				if(!(this.userMacId&&this.userLocation.longitude)){
-					return mui.confirm('<span style="color:#ad372e">手机定位失败，无法打卡</span>','提示',['确认'],function(){},'div');
+					this.showPopupAlert = true;
+					this.popupAlertContent = "手机定位失败，无法打卡"
+					return false;
 				}
 				if(!this.clockRange.effective){
-					return mui.confirm('<span style="color:#ad372e">不在考勤范围内，无法打卡!</span>','提示',['确认'],function(){},'div');
+					this.showPopupAlert = true;
+					this.popupAlertContent = "不在考勤范围内，无法打卡!"
+					return false;
 				}
 				let _this = this;
-				mui.confirm('<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</>','确定要打卡吗',['取消','确定'],function(e){
-						if(e.index==1){
+				uni.showModal({
+					title: '提示',
+					content: '<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</p>',
+					// showCancel:false,
+					success: function (res) {
+						if (res.confirm) {
 							_this.postClock();
+						} else if (res.cancel) {
+							console.log('用户点击取消');
 						}
-					},'div')
+					}
+				})
+// 				uni.confirm('<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</p>','确定要打卡吗',['取消','确定'],function(e){
+// 						if(e.index==1){
+// 							_this.postClock();
+// 						}
+// 					},'div')
 			},
 			//打卡请求
 			postClock(){
-				this.$util.showWaiting();
+				uni.showLoading({
+					mask:true,
+					title:'正在打卡..'
+				})
 				this.$ajax.post(this.$path.CLOCKRECORDADD,{
 					empNo: this.userInfo.loginName,
 					token: this.userInfo.token,
@@ -184,7 +241,7 @@
 				},(res)=>{
 					uni.showToast({
 						icon:"none",
-						title:"res.message"
+						title:res.message
 					})
 					this.initVar();
 					this.searchClockHistory();
@@ -215,11 +272,6 @@
 			},
 			loadMoreList(){
 				this.searchClockHistory();
-			},
-			//帮助
-			helpTips(){
-				mui.confirm(
-				`<p class="tl">1、注意手机需要开启法本通定位权限，否则可导致不能获取位置信息</p><p class="tl">2、定位不准可重新定位，但定位地址不能修改</p><p class="tl">3、若有数据异常等问题请联系对应员工关系处理</p>`,'提示',['确定'],function(){},'div')
 			},
 			getEffective(ob){
 				console.log(666666666666+JSON.stringify(ob))
@@ -260,7 +312,16 @@
 			},
 			closeReposition(){
 				this.showReposition = false;
+			},
+			//关闭alert弹框
+			alertPopupButtonEvents(){
+				this.showPopupAlert = false
+			},
+			//关闭confirm弹框
+			confirmPopupButtonEvents(index){
+				this.showPopupConfirm = false
 			}
+			
 		}
 	}
 </script>
@@ -271,7 +332,7 @@
 	flex-direction: column;
 }
 .content{
-	margin-top: 10px;
+	/* margin-top: 10px; */
 	background: #FFFFFF;
 }
 .head{

@@ -32,11 +32,35 @@ const requst = function(type,url,data,successBack,errorBack,completeBack){
         //this.text = 'request success';
 		},
 		fail: (err)=>{
-			console.log('err:'+JSON.stringify(err))
-			uni.showToast({
-				icon:'none',
-				title:'请求失败！'
+			let p = new Promise(function(resolve,reject){
+				uni.getNetworkType({
+					success: function (res) {
+						console.log(res.networkType);
+						if(res.networkType=='none'){
+							//没有网络
+							resolve()
+						}else{
+							reject()
+						}
+					},
+					fail:function(){
+						reject()
+					}
+				});
 			})
+			p.then(()=>{
+				uni.showToast({
+					icon:'none',
+					title:'请求失败,请检查网络！'
+				})
+			}).catch(()=>{
+				uni.showToast({
+					icon:'none',
+					title:'服务器异常，请联系管理员！'
+				})
+			})
+			// console.log('err:'+JSON.stringify(err))
+			
 			// errorBack();
 		},
 		complete: (res) => {
