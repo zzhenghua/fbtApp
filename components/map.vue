@@ -27,10 +27,6 @@
 				default:function(){
 					return {}
 				}
-			},
-			effective:{
-				type:Boolean,
-				default:true
 			}
 		},
 		computed:{
@@ -40,11 +36,12 @@
 			// headerBar,
 			// Scroll,
 		},
-		created(){
+		onLoad(){
+			// #ifdef APP-PLUS
 			setTimeout(function(){
 				this.init();
 			}.bind(this),300)
-
+			// #endif
 		},
 		methods:{
 			
@@ -86,14 +83,18 @@
 								
 								if(distance>_this.workInfo.range){
 									// img = mui.os.ios?"../static/img/06_ios.png":"../static/img/06_ios.png";
-									_this.effective = false;
+									// _this.effective = false;
 		//							_this.getScale(distance);
+									_this.$emit('getEffective',{
+										effective:false,
+										activeIndex:''
+									});
 									console.log(_this.scalen);
 									mapObj.setZoom(_this.scalen);
 								}else{
-									_this.effective = true;
+									// _this.effective = true;
 									_this.$emit('getEffective',{
-										effective:_this.effective,
+										effective:true,
 										activeIndex:i
 									});
 								}

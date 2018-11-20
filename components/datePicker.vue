@@ -1,8 +1,10 @@
 <template>
+	<view >
+	<view class="mask" @click="cancel" catchtouchmove="true"></view>
     <view class="popup popup-bottom" :class="{animate:animate}">
         <!-- <view class="title">日期：{{year}}年{{month}}月{{day}}日</view> -->
 		<!-- <view class="mask" v-show="showMask" @click="hide"></view> -->
-		<view class="uni-flex picker_head">
+		<view class="uni-flex picker_head" catchtouchmove="true">
 			<view class="uni-flex-item tl"><text class="text" @tap="cancel">取消</text></view>
 			<button type="primary" @tap="sureCallback" class="mui-btn1 primary" style="margin:0;border-radius:4px;">确定</button>
 		</view>
@@ -27,6 +29,7 @@
 			</picker-view-column>
         </picker-view>
     </view>
+	</view>
 </template>
 
 <script>
@@ -36,10 +39,6 @@
 			dtMode:{
 				type:String,
 				default:'date'
-			},
-			show:{
-				type:Boolean,
-				default:false
 			},
 			time:{//默认日期
 				type:String,
@@ -123,7 +122,7 @@
 				return [ this.year-1990, this.month-1, this.day-1, this.hour, this.minute, this.second]
 			}
 		},
-		created() {
+		onLoad() {
 			setTimeout(()=>{
 				this.animate = true;
 			},100)
@@ -141,8 +140,9 @@
             },
 			//关闭
 			cancel(){
-				// this.animate = false;
+				this.animate = false;
 				this.$emit('hideDtPicker');
+				
 			},
 			closeAnimate(){
 				this.animate = false;
@@ -191,7 +191,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     picker-view {
         width: 100%;
         height: 500upx;
@@ -215,35 +215,12 @@
 		line-height:60rpx;
 	}
 	.popup {
-			position: absolute;
+			position: fixed;
 			z-index: 999;
 			background-color: #ffffff;
 			-webkit-box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
 			box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
 			transition:  all ease 0.3s;
-		}
-		.popup-middle {
-			width: 400upx;
-			height: 400upx;
-			border-radius: 10upx;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			margin: auto;
-		}
-	
-		.popup-top {
-			top: 0;
-			width: 100%;
-			height: 80upx;
-			text-align: center;
-		}
-	
-		.popup-top text {
-			line-height: 80upx;
-			margin-left: 20upx;
-			font-size: 32upx;
 		}
 	
 		.popup-bottom {

@@ -160,8 +160,14 @@
         {
             "path" : "pages/worktop/clock_reposition/clock_reposition",
             "style" : {
-							"navigationBarTitleText" : "重新定位"
-						}
+                "navigationBarTitleText" : "重新定位"
+            }
+        },
+        {
+            "path" : "pages/worktop/clock_history/clock_history",
+            "style" : {
+                "navigationBarTitleText" : "打卡历史"
+            }
         }
     ],
     "globalStyle" : {

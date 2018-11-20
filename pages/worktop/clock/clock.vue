@@ -4,9 +4,9 @@
 			<view class="head uni-flex">
 				<view class="uni-flex-item">
 					<icon class="uni-icon iconfont">&#xe669;</icon>
-					2018-11-15
+					{{time0}}
 				</view>
-				<navigator url="" class="link">历史查询</navigator>
+				<navigator url="./../clock_history/clock_history" class="link">历史查询</navigator>
 			</view>
 			<view class="uni-content-info">
 				<view class="radius" @tap="punchClock">
@@ -14,10 +14,12 @@
 					<text class="cccc">{{time1}}</text>
 				</view>
 				<view class="current uni-flex">
-					<icon class="iconfont uni-icon font20 green" style="margin-top: -3px;color:#f0ad4e;" :style="{color: clockRange.effective?'#1AAD19':'#f0ad4e'}">&#xe656;</icon>
-					<text v-if="!userLocation.longitude">定位信息获取中...</text>
+					<icon class="iconfont uni-icon font20 green" style="margin-top: -3px;color:#f0ad4e;" :style="{color: (workInfo.workList&&workInfo.workList[0]&&workInfo.workList[0].longitude&&clockRange.effective)?'#1AAD19':'#f0ad4e'}">&#xe656;</icon>
+					<text v-if="!userLocation.longitude||!workInfo.workList">定位信息获取中...</text>
+					<text v-else-if="!workInfo.workList[0]||!workInfo.workList[0].longitude">没有维护工作地点</text>
 					<text v-else-if="clockRange.effective">已进入考勤范围内</text>
-					<text v-else>不在考勤范围内</text>
+					<text v-else-if="clockRange.effective!=null">不在考勤范围内</text>
+					<text v-else>定位信息获取中...</text>
 					<text class="link"  @tap="openRepostion">去重新定位</text>
 				</view>
 			</view>
@@ -37,7 +39,7 @@
 			</view>
 		</view>
 		
-		<map-view v-if="this.workInfo.workList" @getEffective="getEffective" :userLocation="userLocation" :workInfo="workInfo"  :effective="clockRange.effective"></map-view>
+		<map-view v-if="this.workInfo.workList" @getEffective="getEffective" :userLocation="userLocation" :workInfo="workInfo" ></map-view>
 		
 		<popup-alert v-if="showPopupAlert" :showPopup="showPopupAlert" @buttonEvents="alertPopupButtonEvents">
 			<view class=""  style="width: 500upx;">
@@ -45,11 +47,11 @@
 			</view>
 		</popup-alert>
 		
-		<!-- <popup-confirm v-if="showPopupConfirm" :showPopup="showPopupConfirm" @buttonEvents="confirmPopupButtonEvents">
+		<popup-confirm v-if="showPopupConfirm" :showPopup="showPopupConfirm" @buttonEvents="confirmPopupButtonEvents">
 			<view class=""  style="width: 500upx;">
 				<view v-html="popupConfirmContent"></view>
 			</view>
-		</popup-confirm> -->
+		</popup-confirm>
 		
 	</view>
 </template>
@@ -82,6 +84,9 @@
 			...mapState(['userInfo','clockRange']),
 			time1(){
 				return this.time.split(' ')[1]
+			},
+			time0(){
+				return this.time.split(' ')[0]
 			}
 		},
 		onLoad(){
@@ -205,10 +210,12 @@
 					return false;
 				}
 				let _this = this;
-				uni.showModal({
+				this.showPopupConfirm = true;
+				this.popupConfirmContent = '<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</p>';
+				
+				/* uni.showModal({
 					title: '提示',
-					content: '<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</p>',
-					// showCancel:false,
+					content: ,
 					success: function (res) {
 						if (res.confirm) {
 							_this.postClock();
@@ -216,7 +223,7 @@
 							console.log('用户点击取消');
 						}
 					}
-				})
+				}) */
 // 				uni.confirm('<p class="tl">打卡时间：'+this.time+'</p><p class="tl">打卡地点：'+this.workInfo.workList[this.workInfo.activeIndex].address+'</p><p class="c999 tl font12">注：打卡时间仅作参考，以服务器时间为准</p>','确定要打卡吗',['取消','确定'],function(e){
 // 						if(e.index==1){
 // 							_this.postClock();
@@ -319,6 +326,10 @@
 			},
 			//关闭confirm弹框
 			confirmPopupButtonEvents(index){
+				if(index==1){
+					//确定
+					this.postClock()
+				}
 				this.showPopupConfirm = false
 			}
 			

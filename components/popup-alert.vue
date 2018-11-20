@@ -7,7 +7,7 @@
 				<slot></slot>
 			</view>
 			<view class="popup-foot uni-flex">
-					<view class="popup-button uni-flex-item tc c0093dd" hover-class="popup-button-hover" @tap="buttonEvents(index)">确定</view>
+				<view class="popup-button uni-flex-item tc c0093dd" hover-class="popup-button-hover" @tap="buttonEvents(index)">确定</view>
 			</view>
 		</view>
 	</view>
@@ -30,105 +30,11 @@
 		},
 		methods: {
 			buttonEvents(index){
-					this.$emit('buttonEvents');
+				this.$emit('buttonEvents');
 			}
 		}
 	}
 </script>
 <style>
-
-
-	.popup {
-		position: absolute;
-		z-index: 999;
-		background-color: #ffffff;
-		-webkit-box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
-		box-shadow: 0 0 30upx rgba(0, 0, 0, .1);
-	}
-
-	.popup-middle {
-		/* width: 400upx;
-		height: 400upx; */
-		border-radius: 24upx;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%,-50%);
-	}
-
-	.popup-top {
-		top: 0;
-		width: 100%;
-		height: 100upx;
-		text-align: center;
-	}
-
-	.popup-top text {
-		line-height: 100upx;
-		margin-left: 20upx;
-		font-size: 32upx;
-	}
-
-	.popup-bottom {
-		bottom: 0;
-		width: 100%;
-		height: 100upx;
-		text-align: center;
-	}
-
-	.popup-content {
-		padding: 10upx 30upx;
-		min-height: 200upx;
-		/* font-size: 30upx;
-		line-height: 30upx;
-		margin-top: 150upx;
-		text-align: center; */
-	}
-	
-	.popup-head{
-		height: 80upx;
-		line-height: 80upx;
-		padding: 0 30upx;
-		font-weight: bold;
-		font-size: 32upx;
-		position: relative;
-	}
-	.popup-foot{
-		height: 80upx;
-		line-height: 80upx;
-		font-size: 32upx;
-		position: relative;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-	}
-	.popup-foot:before{
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		height: 1px;
-		background-color: #DDDDDD;
-		transform: scaleY(0.5);
-	}
-	.popup-foot .popup-button{
-		position: relative;
-		height: 100%;
-	}
-	.popup-button-hover{
-		background: #EEEEEE;
-	}
-	.popup-foot .popup-button:before{
-			content: "";
-			position: absolute;
-			left: 0;
-			top: 0;
-			bottom: 0;
-			width: 1px;
-			background-color: #DDDDDD;
-			transform: scaleX(0.5);
-	}
-	.popup-foot .popup-button:first-child:before{
-		width: 0px;
-	}
+	@import "../common/popup.css"
 </style>

@@ -64,7 +64,9 @@ const requst = function(type,url,data,successBack,errorBack,completeBack){
 			// errorBack();
 		},
 		complete: (res) => {
-			uni.hideLoading();
+			setTimeout(()=>{
+				uni.hideLoading();
+			},500)
 			// console.log('complete:'+JSON.stringify(res))
 			completeBack?completeBack():''
 		}

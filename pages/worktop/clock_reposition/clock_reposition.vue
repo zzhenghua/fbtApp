@@ -30,7 +30,7 @@
 			return {
 				userLocation:{},
 				workInfo:{},
-				scalen:plus.os.name=='iOS'?16:17,//缩放的值
+				scalen:17,//缩放的值
 				covers:[],
 				circles:[]
 			};

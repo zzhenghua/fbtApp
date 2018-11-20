@@ -62,7 +62,6 @@
 			</view>
 		</view>
 		
-		<view class="mask" v-show="showDtPicker" @click="hideDtPicker"></view>
 		<date-picker ref="dtPicker" :dtMode="dtMode" v-if="showDtPicker" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 		
 	</view>

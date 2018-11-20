@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     state: {
         userInfo: "",//用户信息
 		clockRange:{
-			effective:false,//是否在打卡范围内
+			effective:null,//是否在打卡范围内
 			activeIndex:''//打卡地址index
 		}
     },
