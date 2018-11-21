@@ -91,8 +91,8 @@
 		},
 		onLoad(){
 			this.getTime();
+			this.getUserLocation();
 			setTimeout(function(){
-				this.getUserLocation();
 				this.searchClockHistory();
 				this.getUserMacId();
 				this.getWorkAddress();
@@ -100,6 +100,10 @@
 			}.bind(this),1100)
 		},
 		onNavigationBarButtonTap(e){
+			if(this.showPopupAlert||this.showPopupConfirm){
+				return;
+			}
+			
 			this.popupAlertContent = `
 			<div style="line-height: 2; font-size: 16px;text-align: center;font-weight: bold;">
 				提示
@@ -113,6 +117,9 @@
 		onBackPress() {
 			if(this.showPopupAlert) {
 				this.showPopupAlert = false;
+				return true;
+			}else if(this.showPopupConfirm) {
+				this.showPopupConfirm = false;
 				return true;
 			}
 		},

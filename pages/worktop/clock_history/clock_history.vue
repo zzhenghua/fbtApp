@@ -7,6 +7,7 @@
 			</view>
 			<button type="primary" class="primary mui-btn1" @click="selectTime">年月选择</button>
 		</view>
+		<scroll-view scroll-y  style="height: calc(100% - 62px);" @scrolltolower="loadMoreData" lower-threshold="0" >
 		<view class="clockHistory c666">
 			<view class="dkRecord" v-for="(item,index) in list" :key="index">
 				<view class="">
@@ -19,8 +20,10 @@
 					</view>
 				</view>
 			</view>
-			<load-more :loadingType="loadingType" v-if="list.length>9"></load-more>
 		</view>
+		<load-more :loadingType="loadingType" v-if="list.length>9"></load-more>
+		</scroll-view>
+		
 		<date-picker ref="dtPicker" dtMode="month" v-if="showDtPicker" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 	</view>
 </template>
@@ -65,10 +68,10 @@
 			}
 		},
 		onReachBottom(){
-			if(this.loadingType==0){
+			/* if(this.loadingType==0){
 				this.loadingType=1;
 				this.searchClockHistory(this.selectedDate);
-			}
+			} */
 		},
 		methods:{
 			//选择日期
@@ -127,13 +130,20 @@
 				},(error)=> {
 				});
 			},
+			//滚动到底部时触发
+			loadMoreData(){
+				if(this.loadingType==0){
+					this.loadingType=1;
+					this.searchClockHistory(this.selectedDate);
+				}
+			}
 		}
 	}
 </script>
 
 <style>
 .page{
-	min-height: 100%;
+	height: 100%;
 	flex-direction: column;
 	background: #FFFFFF;
 }

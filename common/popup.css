@@ -37,7 +37,7 @@
 	}
 
 	.popup-content {
-		padding: 10upx 30upx;
+		padding: 30upx;
 		min-height: 200upx;
 		display: flex;
 		align-items: center;

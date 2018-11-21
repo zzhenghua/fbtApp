@@ -113,6 +113,11 @@
             "path" : "pages/worktop/notice_details/notice_details",
             "style" : {
                 "navigationBarTitleText" : "详情页"
+// 				"app-plus" : {
+// 					"titleNView" : {
+// 						"type" : "transparent"
+// 					}
+// 				}
             }
         },
         {
@@ -168,6 +173,18 @@
             "style" : {
                 "navigationBarTitleText" : "打卡历史"
             }
+        },
+        {
+            "path" : "pages/worktop/employeeStyle/employeeStyle",
+            "style" : {
+                "navigationBarTitleText" : "员工风采"
+            }
+        },
+        {
+            "path" : "pages/worktop/wages/wages",
+            "style" : {
+				"navigationBarTitleText" : "薪资查询"
+			}
         }
     ],
     "globalStyle" : {

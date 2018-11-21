@@ -49,6 +49,11 @@
 					this.article = res.data.data
 					this.htmlString = res.data.data.content.replace(/<img/g, "<img onclick=\"previewImg\" class=\"image\"").replace(/<p/g, "<p class=\"p\"");
 					//this.initImage();
+					if(res.data.data.title){
+						uni.setNavigationBarTitle({
+							title: res.data.data.title
+						});
+					}
 				},(error)=> {
 				});
 			},

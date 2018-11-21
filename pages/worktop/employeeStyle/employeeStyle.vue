@@ -5,7 +5,7 @@
 		<view class="uni-list">
 			<view class="uni-list-cell" v-for="(item,index) in list" :key="index">
 				<view class="uni-list-cell-navigate uni-navigate-right" hover-class="uni-list-cell-hover">
-					<navigator :url="'../notice_details/notice_details?type=2&id='+item.id" hover-class="">
+					<navigator :url="'../notice_details/notice_details?type=3&id='+item.id" hover-class="">
 					<view class="font14 uni-ellipsis bold">{{item.title}} </view>
 			 	    <view class="uni-ellipsis-2 summary font14" v-if="item.description"><text class="c999">摘要：</text>{{item.description}}</view>
 			 	    <div class="uni-flex c999 font12"><view class="uni-flex-item">作者：<text class="uni-badge uni-badge-warning">{{item.publisher}}</text></view><view>{{item.publishDate}}</view></div>
@@ -13,6 +13,7 @@
 				</view>
 			</view>
 		</view>
+		
 		<load-more :loadingType="loadingType" v-if="list.length>9"></load-more>
 		</scroll-view>
 	</view>
@@ -57,7 +58,7 @@
 					"loginName":this.userInfo.loginName,
 					"token":this.userInfo.token,
 					"keyword":searchVal||'',
-					"knoType":"2",
+					"knoType":"3",
 					"page":this.page,
 					"pageSize":this.pageSize
 				},(res)=>{

@@ -38,6 +38,24 @@
 		</view>
 		</view>
 		
+		<view class="paddingTop10">
+			<view class="section_head uni-flex">
+				<view class="section_title uni-flex-item">
+					<span class="iconfont icon-yuangongfengcai" style="background: #b481c1;">&#xe608;</span>
+					<text class="bold">员工风采</text>
+				</view>
+				<navigator url="../worktop/employeeStyle/employeeStyle" class="link">更多</navigator>
+			</view>
+		<view class="uni-list">
+			<view class="uni-list-cell" v-for="(item,index) in ygList" :key="index" hover-class="uni-list-cell-hover">
+				<view class="uni-list-cell-navigate uni-flex" @tap="toDetails(3,item.id)">
+					<view class="uni-flex-item uni-ellipsis">{{item.title}}</view> 
+					<text class="font12 c999">{{item.publishDate}}</text>
+				</view>
+			</view>
+		</view>
+		</view>
+		
 		<!-- <navigator url="../icon/icon">
 			<button type="primary" class="primary" size="mini">图标</button>
 		</navigator> -->
