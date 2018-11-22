@@ -295,7 +295,9 @@
 			width: 100%;
 			display: block;
 		}
-		
+		.uni-content-padded {
+			padding: 10px;
+		}
 		/*popup 
 		 */
 		

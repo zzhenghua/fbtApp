@@ -2,7 +2,7 @@
 	<view class="">
 		<view class="mask" v-show="showPopup"></view>
 		<view v-show="showPopup" class="popup popup-middle" >
-			<view class="popup-head" v-if="titile">{{titile}}</view>
+			<view class="popup-head tc" v-if="title">{{title}}</view>
 			<view class="popup-content">
 				<slot></slot>
 			</view>
@@ -19,7 +19,7 @@
 				type:Boolean,
 				default:false
 			},
-			titile:{
+			title:{
 				type:String,
 				default:''
 			},

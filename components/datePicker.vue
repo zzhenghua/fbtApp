@@ -40,13 +40,40 @@
 				type:String,
 				default:'date'
 			},
-			time:{//默认日期
+			defaultTime:{//默认日期  2018-11-22 15:50:30
 				type:String,
 				default:''
 			}
 		},
         data: function () {
             const date = new Date()
+			if(this.defaultTime){
+				console.log(this.defaultTime);
+				console.log(this.defaultTime);
+				let ymd = this.defaultTime.split(' ')[0];
+				let hms = this.defaultTime.split(' ')[1];
+				if(ymd.split('-')[0]){
+					date.setFullYear(ymd.split('-')[0]);
+				}
+				if(ymd.split('-')[1]){
+					date.setMonth(ymd.split('-')[1]+1);
+				}
+				if(ymd.split('-')[2]){
+					date.setDate(ymd.split('-')[2]);
+				}
+				if(hms){
+					if(hms.split(':')[0]){
+						date.setHours(ymd.split('-')[0]);
+					}
+					if(hms.split(':')[1]){
+						date.setMinutes(ymd.split('-')[1]);
+					}
+					if(hms.split(':')[2]){
+						date.setSeconds(ymd.split('-')[2]);
+					}
+				}
+			}
+			
             const years = []
             const year = date.getFullYear()
             const months = []
@@ -54,12 +81,12 @@
             const days = []
             const day = date.getDate()
 						
-						const hours = []
-						const hour = date.getHours()
-						const minutes = []
-						const minute = date.getMinutes()
-						const seconds = []
-						const second = date.getSeconds()
+			const hours = []
+			const hour = date.getHours()
+			const minutes = []
+			const minute = date.getMinutes()
+			const seconds = []
+			const second = date.getSeconds()
 				
             for (let i = 1990; i <= 2030; i++) {
                 years.push(i)

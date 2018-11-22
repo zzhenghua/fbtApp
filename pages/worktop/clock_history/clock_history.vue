@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<view class="head uni-flex">
+		<view class="head uni-flex cred">
 			<view class="uni-flex-item">
 				<icon class="uni-icon iconfont">&#xe669;</icon>
 				{{selectedDate||'请选择年月'}}

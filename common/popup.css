@@ -46,7 +46,9 @@
 		margin-top: 150upx;
 		text-align: center; */
 	}
-	
+	.popup-head~.popup-content{
+		padding: 0 30upx 30upx;
+	}
 	.popup-head{
 		height: 80upx;
 		line-height: 80upx;

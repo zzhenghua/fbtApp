@@ -37,6 +37,19 @@
 				this.getDeltail(e.type,e.id)
 			}
 		},
+		onPageScroll(e){
+			// console.log(e.scrollTop)
+			let _this = this;
+			if(e.scrollTop>70){
+				uni.setNavigationBarTitle({
+					title: _this.article.title
+				});
+			}else{
+				uni.setNavigationBarTitle({
+					title: "详情页"
+				});
+			}
+		},
 		methods:{
 			//获取详情
 			getDeltail(type,id){
@@ -49,11 +62,11 @@
 					this.article = res.data.data
 					this.htmlString = res.data.data.content.replace(/<img/g, "<img onclick=\"previewImg\" class=\"image\"").replace(/<p/g, "<p class=\"p\"");
 					//this.initImage();
-					if(res.data.data.title){
+					/* if(res.data.data.title){
 						uni.setNavigationBarTitle({
 							title: res.data.data.title
 						});
-					}
+					} */
 				},(error)=> {
 				});
 			},
