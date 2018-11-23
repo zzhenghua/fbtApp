@@ -3,7 +3,7 @@
 		<view class="uni-content-padded">
 			<text class="bold">问题：{{detailsData.question.description}}</text>
 		</view>
-		<scroll-view scroll-y style="height: calc(100% - 123px);">
+		<scroll-view scroll-y style="height: calc(100% - 123px);" :scroll-into-view="scrollIntoView">
 			<view class="newsList">
 				<view class="li" v-for="(item,index) in detailsData.answer" :key="index">
 					<view class="content" v-if="item.emp_no==userInfo.loginName">
@@ -13,6 +13,7 @@
 						<text class="bold">回复：</text><text v-html="item.reply"></text><text class="tr c999 font12"> {{item.create_time}}</text>
 					</view>
 				</view>
+				<view id="scrollBottom"></view>
 			</view>
 		</scroll-view>
 		<view class="ftBtns uni-flex" ref="ftBtns">
@@ -33,6 +34,10 @@
 				default:function () {
 					return {};	
 				}
+			},
+			scrollIntoView:{
+				type:String,
+				default:''
 			}
 		},
 		data() {

@@ -47,7 +47,7 @@
 		},
         data: function () {
             const date = new Date()
-			if(this.defaultTime){
+			/* if(this.defaultTime){
 				console.log(this.defaultTime);
 				console.log(this.defaultTime);
 				let ymd = this.defaultTime.split(' ')[0];
@@ -72,7 +72,7 @@
 						date.setSeconds(ymd.split('-')[2]);
 					}
 				}
-			}
+			} */
 			
             const years = []
             const year = date.getFullYear()
@@ -150,6 +150,38 @@
 			}
 		},
 		onLoad() {
+			console.log("defaultTime:"+this.defaultTime)
+			
+			//设置默认值
+			if(this.defaultTime){
+				console.log(this.defaultTime);
+				console.log(this.defaultTime);
+				let ymd = this.defaultTime.split(' ')[0];
+				let hms = this.defaultTime.split(' ')[1];
+				if(ymd.split('-')[0]){
+					this.year = ymd.split('-')[0];
+				}
+				if(ymd.split('-')[1]){
+					this.month = ymd.split('-')[1];
+				}
+				if(ymd.split('-')[2]){
+					this.day = ymd.split('-')[2];
+				}else{
+					this.day = 1;
+				}
+				if(hms){
+					if(hms.split(':')[0]){
+						this.hour = ymd.split('-')[0];
+					}
+					if(hms.split(':')[1]){
+						this.minute = ymd.split('-')[1];
+					}
+					if(hms.split(':')[2]){
+						this.second = ymd.split('-')[2];
+					}
+				}
+			}
+			
 			setTimeout(()=>{
 				this.animate = true;
 			},100)

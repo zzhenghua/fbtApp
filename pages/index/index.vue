@@ -20,7 +20,7 @@
 				</view>
 			</view>
 			
-		<view class="">
+		<view class="marginBottom10" v-if="showGg&&ggList.length>0">
 			<view class="section_head uni-flex">
 				<view class="section_title uni-flex-item">
 					<span class="iconfont icon-gonggao1-copy" style="background: #e7b55e;">&#xe600;</span>
@@ -38,7 +38,7 @@
 		</view>
 		</view>
 		
-		<view class="paddingTop10">
+		<view class="marginBottom10" v-if="showYg&&ygList.length>0">
 			<view class="section_head uni-flex">
 				<view class="section_title uni-flex-item">
 					<span class="iconfont icon-yuangongfengcai" style="background: #b481c1;">&#xe608;</span>

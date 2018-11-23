@@ -113,13 +113,13 @@
             "path" : "pages/worktop/notice_details/notice_details",
             "style" : {
                 "navigationBarTitleText" : "详情页"
-// 				"app-plus" : {
-// 					"titleNView" : {
-// 						"type" : "transparent"
-// 					}
-// 				}
             }
         },
+        // 				"app-plus" : {
+        // 					"titleNView" : {
+        // 						"type" : "transparent"
+        // 					}
+        // 				}
         {
             "path" : "pages/worktop/attendance/attendance",
             "style" : {
@@ -183,7 +183,43 @@
         {
             "path" : "pages/worktop/wages/wages",
             "style" : {
-				"navigationBarTitleText" : "薪资查询"
+                "navigationBarTitleText" : "薪资查询"
+            }
+        },
+        {
+            "path" : "pages/worktop/apply/apply",
+            "style" : {
+                "navigationBarTitleText" : "申请审批"
+            }
+        },
+        {
+            "path" : "pages/worktop/myApply/myApply",
+            "style" : {
+                "navigationBarTitleText" : "我的审批"
+            }
+        },
+        {
+            "path" : "pages/worktop/myDraft/myDraft",
+            "style" : {
+                "navigationBarTitleText" : "我的草稿"
+            }
+        },
+        {
+            "path" : "pages/worktop/mySubmit/mySubmit",
+            "style" : {
+                "navigationBarTitleText" : "我的提交"
+            }
+        },
+        {
+            "path" : "pages/worktop/apply_details/apply_details",
+            "style" : {
+                "navigationBarTitleText" : "表单详情"
+            }
+        },
+        {
+            "path" : "pages/worktop/newForm/newForm",
+            "style" : {
+				"navigationBarTitleText" : "新建流程"
 			}
         }
     ],

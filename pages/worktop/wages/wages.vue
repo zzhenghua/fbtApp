@@ -278,7 +278,7 @@
 					</view>
 				</view>
 			</scroll-view>
-			<answer-details ref="answerComponents" v-if="showDetails" :detailsData="detailsData" @answerText="answerText" @backList="backList"></answer-details>					
+			<answer-details ref="answerComponents" v-if="showDetails" :detailsData="detailsData" :scrollIntoView="scrollIntoView"  @answerText="answerText" @backList="backList"></answer-details>					
 		</view>
 		<date-picker ref="dtPicker" dtMode="month" v-if="showDtPicker" :defaultTime="defaultTime" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 		
@@ -288,8 +288,6 @@
 			</view>
 		</popup-confirm>
 		
-		<!-- <dialog-view :title="popTitle" v-if="isShowBox" :show="isShowBox" :btns="btns" @btnEvents="btnEvents">
-		</dialog-view> -->
 		
 	</view>
 </template>
@@ -305,8 +303,8 @@
 		data() {
 			return {
 				currentDate:'',
-				currentWages:{name:'test'},
-				dateWages:{empNo:'121212'},
+				currentWages:{},
+				dateWages:{},
 				selectedDate:'',
 				selectAnswerDate:'',
 				
@@ -331,8 +329,8 @@
 				tabs:["当月薪资","历史查询","历史沟通"],
 				currentTab:0,
 				showDtPicker:false,
-				defaultTime:''
-				
+				defaultTime:'',
+				scrollIntoView:''
 			};
 		},
 		computed:{
@@ -350,10 +348,17 @@
 				this.getWagesInfo();
 			},300)
 		},
+		onUnload(){
+			this.$refs.segmented.onClick(0);
+		},
 		onBackPress(){
 			if(this.showDetails){
 				this.showDetails = false;
-				return;
+				return true;
+			}
+			if(this.showDtPicker){
+				this.showDtPicker = false;
+				return true;
 			}
 		},
 		methods:{
@@ -400,12 +405,12 @@
 			selectYear(isAnswer){
 				let _this = this;
 				this.showDetails = false;
-				/* if(this.currentTab==2){
+				if(this.currentTab==2){
 					this.defaultTime = this.selectAnswerDate;
 				}else{
 					this.defaultTime = this.selectedDate;
-					console.log('wages:'+this.defaultTime)
-				} */
+					// console.log('wages:'+this.defaultTime)
+				}
 				this.showDtPicker=true;
 				/* dtPicker.show(function (res) { 
 					if(isAnswer=="isAnswer"){
@@ -545,6 +550,10 @@
 				},(res)=>{
 					this.showDetails = true;
 					this.detailsData = res.data.data;
+					this.scrollIntoView = "scrollBottom";
+					setTimeout(()=>{
+						this.scrollIntoView = "";
+					},200)
 				},(error)=> {
 					
 				});
@@ -590,7 +599,12 @@
 	height:100px;
 	width:auto;
 	padding:10rpx;
+	border-radius: 4px;
 }
+.uni-list:before{
+	height: 0px;
+}
+
 
 .formBox {
     padding: 0 10px;

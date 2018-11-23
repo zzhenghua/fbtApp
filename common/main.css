@@ -191,6 +191,9 @@ body {
 .paddingTop10{
 	padding-top: 10px;
 }
+.marginBottom10{
+	margin-bottom: 10px;
+}
 .placeholder{
 	color: #CCCCCC;
 }

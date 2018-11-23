@@ -264,6 +264,8 @@
 			font-size: 13px;
 			border-radius: 10px;
 			margin: 0 5px 0 0;
+			line-height: 2.3;
+			min-width: 50px;
 		}
 		.section{
 			margin-top: 10px;
