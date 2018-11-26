@@ -1,7 +1,7 @@
 <template>
 	<view >
-	<view :class="{'mask':showDtPicker}" @click="cancel" catchtouchmove="true"></view>
-    <view class="popup popup-bottom" :class="{animate:showDtPicker}">
+	<view class="mask" @click="cancel" catchtouchmove="true"></view>
+    <view class="popup popup-bottom" :class="{animate:animate}">
         <!-- <view class="title">日期：{{year}}年{{month}}月{{day}}日</view> -->
 		<!-- <view class="mask" v-show="showMask" @click="hide"></view> -->
 		<view class="uni-flex picker_head" catchtouchmove="true">
@@ -43,11 +43,6 @@
 			defaultTime:{//默认日期  2018-11-22 15:50:30
 				type:String,
 				default:''
-			},
-			/* 是否显示控件 */
-			showDtPicker: {
-				type: Boolean,
-				default: false
 			}
 		},
         data: function () {
@@ -187,9 +182,9 @@
 				}
 			}
 			
-// 			setTimeout(()=>{
-// 				this.animate = true;
-// 			},100)
+			setTimeout(()=>{
+				this.animate = true;
+			},100)
 		},
         methods: {
             bindChange: function (e) {
@@ -204,7 +199,7 @@
             },
 			//关闭
 			cancel(){
-				this.showDtPicker = false;
+				this.animate = false;
 				this.$emit('hideDtPicker');
 				
 			},

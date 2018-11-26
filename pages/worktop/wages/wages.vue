@@ -280,7 +280,7 @@
 			</scroll-view>
 			<answer-details ref="answerComponents" v-if="showDetails" :detailsData="detailsData" :scrollIntoView="scrollIntoView"  @answerText="answerText" @backList="backList"></answer-details>					
 		</view>
-		<date-picker ref="dtPicker" dtMode="month" v-if="showDtPicker" :defaultTime="defaultTime" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
+		<date-picker ref="dtPicker" dtMode="month" :showDtPicker="showDtPicker" :defaultTime="defaultTime" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 		
 		<popup-confirm v-if="isShowBox" :title="popTitle" :showPopup="isShowBox" :btns="btns"  @buttonEvents="btnEvents">
 			<view class=""  style="width: 500upx;padding: 0 10upx 10upx;">

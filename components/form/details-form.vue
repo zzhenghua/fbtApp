@@ -1,9 +1,9 @@
 <template>
 	<view class="formBox">
 		<!--新建流程表单-->
-	        <block >
+	        <!-- <block > -->
 	        	 <!--主表-->
-	        <view v-if="tableForm.form"  v-for="(item,$index) in tableForm.form.fields" :key="$index" :class="{flex:item.controlType!=16&&item.isShow=='true',readOnly:item.isEdit=='false'}">
+	        <view v-if="tableForm.form"  v-for="(item,$index) in tableForm.form.fields" :key="$index" :class="{'uni-flex':item.controlType!=16&&item.isShow=='true',readOnly:item.isEdit=='false'}">
 	        	<!--隐藏域-->
 	        	<input v-if="item.controlType==16" type="hidden"  :name="item.key" v-model.trim="item.value">
 	        	<block v-else>
@@ -14,53 +14,54 @@
 	        			<block v-if="item.controlType==9">
 	        				<text class="inputSpan c999">
 		        				<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
-		        					<block v-if="unit.url">
+		        					<!-- <block v-if="unit.url">
 		        						<image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image>
 					        			<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button>
-		        					</block>
-				        			<text class="inputSpan c999" v-else>{{unit.name}}</text>
+		        					
+									</block>
+				        			<text class="inputSpan c999" v-else>{{unit.name}}</text> -->
 				        		</block>
 				        		<!-- <text v-else >{{item.value}}</text> -->
 	        				</text>
 	        			</block>
-	        			<text class="inputSpan c999" v-else>获取select的值123</text>
+	        			<view class="uni-flex-item inputSpan c999" v-else>{{item.value}}</view>
 	        		</block>
 	        		<block v-else>
 		        	<!--单行文本框-->
-		        	<view v-if="item.controlType==1||item.controlType==10" class="flexItem inputText needsclick">
+		        	<view v-if="item.controlType==1||item.controlType==10" class="uni-flex-item inputText needsclick">
 		        		<input v-if="item.validate&&item.validate.number" class="needsclick" type="number"  :name="item.key" v-model.trim="item.value" @input="addTotal1(item.key)" :placeholder="item.validate.maxValue?('参考范围'+item.validate.minValue+'~'+item.validate.maxValue+'之间'):''">
 		        		<input v-else type="text"  :name="item.key" :readonly="item.readonly" v-model.trim="item.value" @input="addTotal1(item.key)">
 		        	</view>
 		        	
 		        	<!--多行文本框-->
-		        	<view v-else-if="item.controlType==2" class="flexItem inputText">
+		        	<view v-else-if="item.controlType==2" class="uni-flex-item inputText">
 		        		<textarea  :name="item.key" v-model.trim="item.value" rows="" cols=""></textarea>
 		        	</view>
 		        	
 		        	<!--文件上传-->
-		        	<view v-else-if="item.controlType==9" class="flexItem inputText" style="font-size: 0;">
+		        	<view v-else-if="item.controlType==9" class="uni-flex-item inputText" style="font-size: 0;">
 		        		<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
 		        			<image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image>
 			        		<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;vertical-align: middle;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button>
 			        		<text style="vertical-align: middle;" class="mui-icon mui-icon-closeempty" @click="removeFile(item,$it)"></text>
 		        		</block>
-			        		<button class="mui-btn mui-btn-mini mui-btn-primary" style="padding: 3px 8px;margin: 2px 5px;" @click="selectFile(item.key)">选择</button>
+			        		<button class="mui-btn1 primary" style="padding: 3px 8px;margin: 2px 5px;" @click="selectFile(item.key)">选择</button>
 			        		<input type="file" :name="item.key+'file'" multiple="multiple" style="width: 0px;height: 0px;opacity: 0;"  :id="item.key" @change="uploadFile(item)" accept="image/*"/>
 		        	</view>
 		        	
 		        	<!--日期控件-->
-		        	<view v-else-if="item.controlType==15" class="flexItem inputText pr" @click="dateKj('_this.tableForm.form.fields['+$index+']')">
+		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj('_this.tableForm.form.fields['+$index+']')">
 		        		<input type="text" readonly="readonly"  :name="item.key" v-model.trim="item.value">
 		        		<text class="iconfont icon-rili1"></text>
 		        	</view>
 		        	
 		        	<!--数据字典-->
-		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="flexItem inputText mui-navigate-right pr">
-		        		<input type="text" :name="item.key" id="" readonly="readonly" :value="item|getText" @click="getSelectPk(item)" />
+		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="uni-flex-item inputText uni-navigate-right pr">
+		        		<input type="text" :name="item.key" id="" disabled="true" :value="item|getText" @click="getSelectPk(item)" />
 		        	</view>
 		        	
 		        	<!--部门、用户弹框-->
-		        	<view v-else class="flexItem inputText mui-navigate-right pr" :data-name="item.key" v-model.trim="item.value" @click="showUser('this.tableForm.form.fields|'+item.key+'|'+item.controlType)">
+		        	<view v-else class="uni-flex-item inputText uni-navigate-right pr" :data-name="item.key" v-model.trim="item.value" @click="showUser('this.tableForm.form.fields|'+item.key+'|'+item.controlType)">
 		        		<input type="hidden" name="" id="" v-model.trim="item.value" />
 		        		<text class="inputSpan" style="width: 80%;">{{item.value}}</text>
 		        	</view>
@@ -74,7 +75,7 @@
 	        <view v-if="subtable.data&&subtable.data.length>0" style="padding: 10px;margin-top:10px;    box-shadow: 0px 0px 10px #ddd;">
 	        <h5>{{subtable.tableDesc}}</h5>
 	        <view class="subItem"  v-for="(dataList,$it) in subtable.data" :key="$it">
-	        <view  v-for="(item,$index) in dataList"  :class="{flex:item.controlType!=16}" :key="$index">
+	        <view  v-for="(item,$index) in dataList"  :class="{'uni-flex':item.controlType!=16}" :key="$index">
 	        	<!--隐藏域-->
 	        	<input v-if="item.controlType==16" type="hidden"  :name="item.key" :value="item.value">
 	        	<block v-else>
@@ -83,35 +84,35 @@
 	        		<text class="inputSpan c999" v-if="item.isEdit=='false'">获取select的值</text>
 	        		<block v-else>
 		        	<!--单行文本框-->
-		        	<view v-if="item.controlType==1||item.controlType==10" class="flexItem inputText needsclick">
+		        	<view v-if="item.controlType==1||item.controlType==10" class="uni-flex-item inputText needsclick">
 		        		<input v-if="item.validate&&item.validate.number" class="needsclick" type="number"  :name="item.key" v-model.trim="item.value" @input="addTotal1(item.key)" :placeholder="item.validate.maxValue?('参考范围'+item.validate.minValue+'~'+item.validate.maxValue+'之间'):''">
 		        		<input v-else type="text"  :name="item.key" v-model.trim="item.value" @input="addTotal1(item.key)">
 		        	</view>
 		        	
 		        	<!--多行文本框-->
-		        	<view v-else-if="item.controlType==2" class="flexItem inputText">
+		        	<view v-else-if="item.controlType==2" class="uni-flex-item inputText">
 		        		<textarea  :name="item.key" v-model.trim="item.value" rows="" cols=""></textarea>
 		        	</view>
 		        	
 		        	<!--文件上传-->
-		        	<view v-else-if="item.controlType==9" class="flexItem inputText">
+		        	<view v-else-if="item.controlType==9" class="uni-flex-item inputText">
 		        		<input type="file"   :name="item.key">
 		        	</view>
 		        	
 		        	<!--日期控件-->
-		        	<view v-else-if="item.controlType==15" class="flexItem inputText pr" @click="dateKj('_this.tableForm.form.subTableList['+$i+'].data['+$it+']['+$index+']','_this.tableForm.form.subTableList['+$i+'].data['+$it+']')">
+		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj('_this.tableForm.form.subTableList['+$i+'].data['+$it+']['+$index+']','_this.tableForm.form.subTableList['+$i+'].data['+$it+']')">
 		        		<input type="text" readonly="readonly"  :name="item.key" v-model.trim="item.value">
 		        		<text class="iconfont icon-rili1"></text>
 		        	</view>
 		        	
 		        	<!--数据字典-->
-		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="flexItem inputText mui-navigate-right pr">
+		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="uni-flex-item inputText uni-navigate-right pr">
 		        		<input type="text" :name="item.key" id="" readonly="readonly" :value="item|getText" @click="getSelectPk(item,'_this.tableForm.form.subTableList['+$i+'].data['+$it+']')" />
 		        	</view>
 		        	
 		        	
 		        	<!--部门、用户弹框-->
-		        	<view v-else class="flexItem inputText mui-navigate-right pr" :data-name="item.key" v-model.trim="item.value" @click="showUser('this.tableForm.form.subTableList['+$i+'].data['+$it+']|'+item.key+'|'+item.controlType)">
+		        	<view v-else class="uni-flex-item inputText uni-navigate-right pr" :data-name="item.key" v-model.trim="item.value" @click="showUser('this.tableForm.form.subTableList['+$i+'].data['+$it+']|'+item.key+'|'+item.controlType)">
 		        		<input type="hidden" name="" id="" v-model.trim="item.value" />
 		        		<text class="inputSpan" style="width: 80%;">{{item.value}}</text>
 		        	</view>
@@ -132,13 +133,16 @@
 	        </view>
 	        </view>
 	        </block>
-	        </block>
+	        <!-- </block> -->
+			<mpvue-picker :themeColor="themeColor" ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueDefault="pickerValueDefault"
+			@onConfirm="onConfirm" @onCancel="onCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 	</view>
 </template>
 
 <script>
 	import { mapState,mapMutations } from 'vuex'
-	
+	import mpvuePicker from "../mpvuePicker.vue"
+	import "../../common/mui.js"
 	//是否为json数据
 	const isJSON = (str)=>{
 	    if (typeof str == 'string') {
@@ -245,15 +249,22 @@
 			return {
 				currentSelectPop:'',
 				fromPage:'',
+				
+				pickerValueArray:[],//选择框
+				mode:'',
+				deepLength:'',
+				pickerValueDefault:''
 			}
 		},
 		computed:{
 			...mapState(['userInfo'])
 		},
 		components:{
-			Scroll
+			mpvuePicker
 		},
 		onLoad(){
+			this.fromPage="newForm";
+			
 			let isDraft = false;//是否为草稿
 			this.fromPage=this.fromPageType;
 			if(this.fromPageType=='myDraft'){
@@ -318,6 +329,7 @@
 		},
 	  	methods:{
 			dateKj(key,fileData){
+				
 //				debugger
 				let _this = this;
 //				debugger
@@ -360,26 +372,47 @@
 				})
 			},
 			getSelectPk(item,fileData){
-				let val = item.value,options=[],_this = this;
-//				for(let i=0;i<item.options.length;i++){
-//					options.push({
-//						value:item.options[i].key,
-//						text:item.options[i].value
-//					})
-//				}
-				//隐藏报销类型的两项
-				if(item.key=='bxlx'){
-					let ar=[];
-					for(let i=0;i<item.options.length;i++){
-						if(item.options[i].value!='flfybx'){
-							ar.push(item.options[i]);
-						}
+				uni.showToast({
+					icon:"none",
+					title:item.options
+				})
+// 				let val = item.value,options=[],_this = this;
+// 				//隐藏报销类型的两项
+// 				if(item.key=='bxlx'){
+// 					let ar=[];
+// 					for(let i=0;i<item.options.length;i++){
+// 						if(item.options[i].value!='flfybx'){
+// 							ar.push(item.options[i]);
+// 						}
+// 					}
+// 					item.options = ar;
+// 				}
+				
+				this.pickerValueArray = [{
+						label: '中国',
+						value: 1
+					},
+					{
+						label: '俄罗斯',
+						value: 2
+					},
+					{
+						label: '美国',
+						value: 3
+					},
+					{
+						label: '日本',
+						value: 4
 					}
-					item.options = ar;
-				}
-				selectPk.setData(item.options);
-				selectPk.pickers[0].setSelectedValue(val, 100);
-				selectPk.show(function(SelectedItem) {
+				];
+				this.mode = 'selector'
+				this.deepLength = 1
+				this.pickerValueDefault = [1];
+				this.$refs.mpvuePicker.show();
+				
+				// selectPk.setData(item.options);
+				// selectPk.pickers[0].setSelectedValue(val, 100);
+				/* selectPk.show(function(SelectedItem) {
 					item.value = SelectedItem[0].value;
 					item.text = SelectedItem[0].text;
 					
@@ -421,8 +454,7 @@
 						_this.isHideDdlc(item,val);
 					}
 					
-				})
-//				selectPk.setData(item.options);
+				}) */
 			},
 //			主表下拉框
 			mainSelector(){
@@ -558,20 +590,21 @@
 				}else if((item.controlType=='11'||item.controlType=='14')&&item.isEdit){
 				
 					//因为这里需要同步请求，所以改用mui.ajax 。异步请求给item赋值后界面不生效
-					mui.ajax(this.$path.SELECTORSELECTITEMTYPE,{
+					
+					uni.request({
+					url:this.$path.SELECTORSELECTITEMTYPE,
+					data:{
 						data:{
-							data:{
 								tableId:tableId,
 								fieldName:fieldName,
 								loginName:this.userInfo.loginName,
 								token:this.userInfo.token,
 								versionNo:this.$path.VERSIONNO
-							}
-						},
+						}},
 						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
+						method:'POST',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json'},
+						header:{'Content-Type':'application/json'},
 						async:false,
 						success:function(res){
 							//服务器返回响应，根据响应结果，分析是否登录成功；
@@ -580,7 +613,7 @@
 									for(let i=0;i<ar.length;i++){
 										ar2.push({
 											value:ar[i].key,
-											text:ar[i].value
+											label:ar[i].value
 										})
 										if(item.value&&item.value==ar[i].key){
 											text = ar[i].value
@@ -589,10 +622,6 @@
 								item.text = text;
 								item.options = ar2;
 							}
-						},
-						error:function(xhr,type,errorThrown){
-							//异常处理；
-							console.log(type);
 						}
 					});
 				}
@@ -632,7 +661,7 @@
 									for(let i=0;i<ar.length;i++){
 										ar2.push({
 											value:ar[i].id,
-											text:ar[i].address
+											label:ar[i].address
 										})
 										if(item.value&&item.value==ar[i].id){
 											text = ar[i].address
@@ -673,7 +702,7 @@
 									for(let i=0;i<ar.length;i++){
 										ar2.push({
 											value:ar[i].id,
-											text:ar[i].name
+											label:ar[i].name
 										})
 										if(item.value&&item.value==ar[i].id){
 											text = ar[i].name
@@ -717,7 +746,7 @@
 									for(let i=0;i<ar.length;i++){
 										ar2.push({
 											value:ar[i].name,
-											text:ar[i].name
+											label:ar[i].name
 										})
 										if(item.value&&item.value==ar[i].name){
 											text = ar[i].name
@@ -1766,7 +1795,7 @@
 				let data = res.data.sysLeaveReasonList,op=[],mainFileds=_this.tableForm.form.fields;
 				for(let i=0;i<data.length;i++){
 					op.push({
-						text:data[i].name,
+						label:data[i].name,
 						value:data[i].code
 					})
 				}
@@ -1834,8 +1863,114 @@
   		},
 	  }
 	}
+	var ar = [{"label":"1000元/月以下","value":"0000001000"},{"label":"1000-2000元/月","value":"0100002000"},{"label":"2001-4000元/月","value":"0200104000"},{"label":"4001-6000元/月","value":"0400106000"},{"label":"6001-8000元/月","value":"0600108000"},{"label":"8001-10000元/月","value":"0800110000"},{"label":"10001-15000元/月","value":"1000115000"},{"label":"15000-25000元/月","value":"1500125000"},{"label":"25000-35000元/月","value":"2500199999"},{"label":"35000-50000元/月","value":"3500150000"},{"label":"50000-70000元/月","value":"5000170000"},{"label":"70000-100000元/月","value":"70001100000"},{"label":"100000元/月以上","value":"100001150000"},{"label":"保密","value":"0000000000"}];
+	var obj={salary_start:25000,salary_end:35000}
+	var valuesAr=[],item,itemArr=[],v;
+	for(var i=0;i<ar.length;i++){
+		item = ar[i];
+		itemArr = item.label.split('-');
+		if(item.label.indexOf('以下')>-1){
+			if(!(obj.salary_start>=parseInt(item.label))){
+				valuesAr.push(item.value)
+			}
+		}else if(item.label.indexOf('以上')>-1){
+			if(!(obj.salary_end<=parseInt(item.label))){
+				valuesAr.push(item.value)
+			}
+		}else if(itemArr.length==2){
+			// if((itemArr[0]<obj.salary_end&&itemArr[0]>obj.salary_start)||(itemArr[1]<obj.salary_end&&itemArr[1]>obj.salary_start)){
+			if((itemArr[0]>obj.salary_start&&itemArr[0]<obj.salary_end)||(itemArr[0]>obj.salary_start&&itemArr[0]<obj.salary_end)){
+				valuesAr.push(item.value)
+			}
+		}
+	}
+	
+	
+	
+	
+	
 </script>
 
 <style>
+.formBox {
+  padding: 0 10px 10px;
+  background: #ffffff;
+}
+.formBox > .uni-row,
+.formBox .uni-flex {
+  border-bottom: 1px solid rgba(226, 226, 226, 0.45);
+}
+.formBox .formTitle {
+  margin: 0;
+  /*text-align: center;*/
+  background: white;
+  /* box-shadow: 0px -1px 0px #999; */
+  border-bottom: 1px solid #f5f5f6;
+  font-size: 16px;
+  border-radius: 40px;
+  display: inline-block;
+  margin: 0 auto;
+  background: #f0ad4e;
+  color: #fff;
+  padding: 5px 10px;
+}
+.formBox .lable {
+  padding: 6px 10px;
+  line-height: 21px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  background: rgba(160, 160, 160, 0.07);
+  color: #333;
+  border-right: 1px solid #efeff4;
+  width: 35%;
+}
+.formBox .inputText {
+  width: 65%;
+  background: #FFFFFF;
+}
+.formBox .inputText input, .formBox .inputText select, .formBox .inputText textarea {
+  margin-bottom: 0;
+  border: none;
+  padding: 6px 15px 6px 5px;
+  height: auto;
+  width: auto;
+}
+.formBox .inputText textarea{
+	min-height: 54px;
+}
+.formBox .uni-navigate-right:after {
+  right: 8px;
+}
+.formBox .iconfont {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  margin-top: -12px;
+}
+.formBox .subItem {
+  border: 5px solid #f8f8f8;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
 
+
+
+
+	.inputSpan{
+		padding: 6px;
+		line-height: 21px;
+		display: inline-block;
+		width:62%;
+		word-wrap: break-word;
+    	word-break: break-all;
+	}
+	.red{
+		color: red;
+	}
+	.readOnly{
+		background: #f8f8f8;
+	}
+	.readOnly .lable{
+		background: none;
+	}
 </style>

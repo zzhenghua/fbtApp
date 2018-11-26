@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "better-scroll": "^1.12.6",
-    "js-md5": "^0.7.3"
+    "jquery": "^3.3.1",
+    "js-md5": "^0.7.3",
+    "mui": "0.0.1"
   },
   "devDependencies": {},
   "engines": {

@@ -24,7 +24,7 @@
 		<load-more :loadingType="loadingType" v-if="list.length>9"></load-more>
 		</scroll-view>
 		
-		<date-picker ref="dtPicker" dtMode="month" v-if="showDtPicker" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
+		<date-picker ref="dtPicker" dtMode="month" :showDtPicker="showDtPicker" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 	</view>
 </template>
 

@@ -302,5 +302,14 @@
 		}
 		/*popup 
 		 */
-		
+		.uni-navigate-right:after {
+			font-family: uniicons;
+			content: '\e583';
+			position: absolute;
+			right: 24upx;
+			top: 50%;
+			color: #bbb;
+			-webkit-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
 </style>
