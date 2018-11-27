@@ -45,19 +45,19 @@
 			        		<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;vertical-align: middle;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button>
 			        		<text style="vertical-align: middle;" class="mui-icon mui-icon-closeempty" @click="removeFile(item,$it)"></text>
 		        		</block>
-			        		<button class="mui-btn1 primary" style="padding: 3px 8px;margin: 2px 5px;" @click="selectFile(item.key)">选择</button>
+			        		<button class="mui-btn1 primary" type="primary" style="padding: 3px 8px;margin: 2px 5px;" @click="selectFile(item.key)">选择</button>
 			        		<input type="file" :name="item.key+'file'" multiple="multiple" style="width: 0px;height: 0px;opacity: 0;"  :id="item.key" @change="uploadFile(item)" accept="image/*"/>
 		        	</view>
 		        	
 		        	<!--日期控件-->
-		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj('_this.tableForm.form.fields['+$index+']')">
-		        		<input type="text" readonly="readonly"  :name="item.key" v-model.trim="item.value">
-		        		<text class="iconfont icon-rili1"></text>
+		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj(item)">
+		        		<input type="text" disabled="true"  :name="item.key" v-model.trim="item.value">
+		        		<text class="iconfont icon-rili1">&#xe669;</text>
 		        	</view>
 		        	
 		        	<!--数据字典-->
 		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="uni-flex-item inputText uni-navigate-right pr">
-		        		<input type="text" :name="item.key" id="" disabled="true" :value="item|getText" @click="getSelectPk(item)" />
+		        		<input type="text" :name="item.key" id="" disabled="true" :value="item.text" @click="getSelectPk(item)" />
 		        	</view>
 		        	
 		        	<!--部门、用户弹框-->
@@ -100,14 +100,14 @@
 		        	</view>
 		        	
 		        	<!--日期控件-->
-		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj('_this.tableForm.form.subTableList['+$i+'].data['+$it+']['+$index+']','_this.tableForm.form.subTableList['+$i+'].data['+$it+']')">
-		        		<input type="text" readonly="readonly"  :name="item.key" v-model.trim="item.value">
-		        		<text class="iconfont icon-rili1"></text>
+		        	<view v-else-if="item.controlType==15" class="uni-flex-item inputText pr" @click="dateKj(item,'_this.tableForm.form.subTableList['+$i+'].data['+$it+']')">
+		        		<input type="text" disabled="true"  :name="item.key" v-model.trim="item.value">
+		        		<text class="iconfont icon-rili1">&#xe669;</text>
 		        	</view>
 		        	
 		        	<!--数据字典-->
 		        	<view v-else-if="item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14" :data-name="item.key" class="uni-flex-item inputText uni-navigate-right pr">
-		        		<input type="text" :name="item.key" id="" readonly="readonly" :value="item|getText" @click="getSelectPk(item,'_this.tableForm.form.subTableList['+$i+'].data['+$it+']')" />
+		        		<input type="text" :name="item.key" id="" disabled="true" :value="item.text" @click="getSelectPk(item,'_this.tableForm.form.subTableList['+$i+'].data['+$it+']')" />
 		        	</view>
 		        	
 		        	
@@ -123,8 +123,8 @@
 	        </view>
 	        </view>
 	        <view class="mui-content-padded tr" v-if="fromPage=='newForm'||isFirstNode">
-	        	<button class="mui-btn mui-btn-mini mui-btn-default" style="padding: 5px; margin-right: 10px;" v-if="subtable.data.length>1" @click="removeSubtableList($i)">删除</button>
-	        	<button class="mui-btn mui-btn-mini mui-btn-primary" style="padding: 5px;" @click="addSubtableList($i)">添加</button>
+	        	<button class="mui-btn1 primary" type="primary" style="padding: 5px; margin-right: 10px;" v-if="subtable.data.length>1" @click="removeSubtableList($i)">删除</button>
+	        	<button class="mui-btn1 primary" type="primary" style="padding: 5px;" @click="addSubtableList($i)">添加</button>
 	        </view>
 	        <view class="mui-content-padded cred font12" v-if="tableForm.form.tableName.indexOf('销假申请表')>-1&&(fromPage=='newForm'||isFirstNode)">
 	        	<view>说明：请假小时折算公式：请假小时数/应出勤工作小时数。(若不清楚应出勤工作小时请联系员工关系)</view>
@@ -136,13 +136,15 @@
 	        <!-- </block> -->
 			<mpvue-picker :themeColor="themeColor" ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueDefault="pickerValueDefault"
 			@onConfirm="onConfirm" @onCancel="onCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
+			<date-picker ref="dtPicker" :dtMode="dtMode" :showDtPicker="showDtPicker" :defaultTime="defaultTime" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 	</view>
 </template>
 
 <script>
 	import { mapState,mapMutations } from 'vuex'
 	import mpvuePicker from "../mpvuePicker.vue"
-	import "../../common/mui.js"
+	import datePicker from "../datePicker.vue"
+	
 	//是否为json数据
 	const isJSON = (str)=>{
 	    if (typeof str == 'string') {
@@ -253,14 +255,20 @@
 				pickerValueArray:[],//选择框
 				mode:'',
 				deepLength:'',
-				pickerValueDefault:''
+				pickerValueDefault:'',
+				pickerItem:'',
+				showDtPicker:false,//日期选择框
+				defaultTime:'',
+				dtPickerItem:'',
+				dtMode:'minute'
 			}
 		},
 		computed:{
 			...mapState(['userInfo'])
 		},
 		components:{
-			mpvuePicker
+			mpvuePicker,
+			datePicker
 		},
 		onLoad(){
 			this.fromPage="newForm";
@@ -272,11 +280,13 @@
 				isDraft = true;
 			}
 			//初始化主表下拉字典
+			uni.showLoading({
+				title:"加载中..."
+			})
 			this.mainSelector();
 			//子表默认有一条数据
 			if(this.fromPage=='newForm'&&isDraft==false){
-				//费用报销表  先不显示子表
-				if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+				
 					let subTableList = this.tableForm.form.subTableList,fields;
 					for(let i=0;i<subTableList.length;i++){
 						fields = subTableList[i].fields;
@@ -286,10 +296,15 @@
 							this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
 							this.concatID(fields,k);
 						}
-						subTableList[i].data.push(this.$util.copyArr(fields));
+						//费用报销表  先不显示子表
+						if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+							subTableList[i].data.push(this.$util.copyArr(fields));
+						}else{
+							subTableList[i].data = [];
+						}
 						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
 					}
-				}
+				
 			}else{
 				let subTableList = this.tableForm.form.subTableList,fields,dataList;
 				for(let i=0;i<subTableList.length;i++){
@@ -328,133 +343,108 @@
 			//console.log(this.tableForm.form.subTableList)
 		},
 	  	methods:{
-			dateKj(key,fileData){
-				
-//				debugger
+			dateKj(item,fileData){
+				// debugger
 				let _this = this;
-//				debugger
-//				datePk.options.type='date';
 				//费用报销流程》发生日期（格式）
-				let  item = eval(key);
-				/*let options = {
-						"type": "",
-						"beginYear": 1960,
-						"endYear": 2020
-				};
-				if(this.tableForm.form.tableName.indexOf('费用报销')>-1&&item.key=='sjfsrq'){
-					options.type="date"
-				}
-				let datePk = new mui.DtPicker(options);*/
+				// let  item = eval(key);
 				if((this.tableForm.form.tableName.indexOf('费用报销')>-1&&item.key=='sjfsrq')||
 					(this.tableForm.form.tableName.indexOf('调动审批')>-1&&item.key=='khjsqsrq')
 				){
-					datePk.init({
-						"type": "date",
-						"beginYear": 1960,
-						"endYear": 2020
-					});
-				}else{
-					datePk.init({
-						"type": "",
-						"beginYear": 1960,
-						"endYear": 2020
-					});
+					this.dtMode = 'date';
 				}
-				datePk.show(function(re){
+				this.defaultTime = item.value;
+				this.dtPickerItem = item;
+				this.showDtPicker=true;
+				
+				/* datePk.show(function(re){
 					eval(key+'.value="'+re.value+'"');
-//					datePk.dispose();
 					if(_this.tableForm.form.tableName.indexOf('调动审批')>-1&&item.key=='khjsqsrq'){
 						_this.addTotal_ddsp(item.key);
 					}else if(fybxlx=='jbfybx'&&item.key=='sjfsrq'){
 						//校验打卡记录
 						_this.checkClock(fileData);
 					}
-				})
+				}) */
+			},
+			//取消
+			hideDtPicker(){
+				// this.$refs.dtPicker.closeAnimate();
+				this.showDtPicker = false;
+			},
+			//确定
+			sureDtPicker(value){
+// 				this.currentDate.year = parseInt(value.split('-')[0]);//加parseInt，否则日历上颜色标记不上
+// 				this.currentDate.month = parseInt(value.split('-')[1]);
+				this.dtPickerItem.value = value;
+				//isAnswer
+				
+				this.hideDtPicker();
+				// this.$refs.vueTimes.getMonthDay();
+			},
+			onConfirm(e) {
+				
+				this.pickerItem.text = e.label;
+				this.pickerItem.value = e.value;
+				
+				if(this.tableForm.form.tableName.indexOf('费用报销表')>-1){
+					//报销类型
+					if(this.pickerItem.key=='bxlx'){
+						this.renderThisSubTable(this.pickerItem);
+						fybxlx = this.pickerItem.value;
+					}
+					//加班明细&&费用名称
+					if(fybxlx=='jbfybx'&&this.pickerItem.key=='fymc'){
+						//校验
+						//this.checkClock(fileData);
+					}
+					//是否客户承担费用
+					if(this.pickerItem.key=='sfkhcdfy'){
+						this.isHideKhcdje(this.pickerItem);
+					}
+				}else if(this.tableForm.form.tableName.indexOf('离职')>-1){
+					if(this.pickerItem.key=='lzlxyggx'){
+						this.LzGetReasons(SelectedItem[0].value);
+					}
+				}else if(this.tableForm.form.tableName.indexOf('入职申请')>-1){
+					if(this.pickerItem.key=='sskhbm'){
+						sskhbm = SelectedItem[0].value;
+						this.getGzdsLczx(this.tableForm.form.fields[index5]);
+					}else{
+						if(this.pickerItem.key=='rybjlx'){
+							rybjlx = SelectedItem[0].value;
+						}
+						this.isHideRzlc(this.pickerItem,val);
+					}
+				}else if(this.tableForm.form.tableName.indexOf('出差申请')>-1){
+					this.isHideCcsq(this.pickerItem);
+				}else if(this.tableForm.form.tableName.indexOf('调动审批')>-1){
+					if(this.pickerItem.key=='dhrybjlx'){
+							rybjlx = SelectedItem[0].value;
+					}
+					this.isHideDdlc(this.pickerItem,val);
+				}
 			},
 			getSelectPk(item,fileData){
-				uni.showToast({
-					icon:"none",
-					title:item.options
-				})
-// 				let val = item.value,options=[],_this = this;
-// 				//隐藏报销类型的两项
-// 				if(item.key=='bxlx'){
-// 					let ar=[];
-// 					for(let i=0;i<item.options.length;i++){
-// 						if(item.options[i].value!='flfybx'){
-// 							ar.push(item.options[i]);
-// 						}
-// 					}
-// 					item.options = ar;
-// 				}
-				
-				this.pickerValueArray = [{
-						label: '中国',
-						value: 1
-					},
-					{
-						label: '俄罗斯',
-						value: 2
-					},
-					{
-						label: '美国',
-						value: 3
-					},
-					{
-						label: '日本',
-						value: 4
+				//隐藏报销类型的两项
+				if(item.key=='bxlx'){
+					let ar=[];
+					for(let i=0;i<item.options.length;i++){
+						if(item.options[i].value!='flfybx'){
+							ar.push(item.options[i]);
+						}
 					}
-				];
-				this.mode = 'selector'
-				this.deepLength = 1
-				this.pickerValueDefault = [1];
+					item.options = ar;
+				}
+				
+				this.pickerItem = item;
+				
+				this.pickerValueArray = item.options||[];
+				this.mode = 'selector';
+				this.deepLength = 1;
+				this.pickerValueDefault = [item.value];
 				this.$refs.mpvuePicker.show();
 				
-				// selectPk.setData(item.options);
-				// selectPk.pickers[0].setSelectedValue(val, 100);
-				/* selectPk.show(function(SelectedItem) {
-					item.value = SelectedItem[0].value;
-					item.text = SelectedItem[0].text;
-					
-					if(_this.tableForm.form.tableName.indexOf('费用报销表')>-1){
-						//报销类型
-						if(item.key=='bxlx'){
-			     			_this.renderThisSubTable(item);
-			     			fybxlx = item.value;
-			     		}
-						//加班明细&&费用名称
-						if(fybxlx=='jbfybx'&&item.key=='fymc'){
-							//校验
-							_this.checkClock(fileData);
-						}
-						//是否客户承担费用
-						if(item.key=='sfkhcdfy'){
-							_this.isHideKhcdje(item);
-						}
-					}else if(_this.tableForm.form.tableName.indexOf('离职')>-1){
-						if(item.key=='lzlxyggx'){
-							_this.LzGetReasons(SelectedItem[0].value);
-						}
-					}else if(_this.tableForm.form.tableName.indexOf('入职申请')>-1){
-						if(item.key=='sskhbm'){
-							sskhbm = SelectedItem[0].value;
-							_this.getGzdsLczx(_this.tableForm.form.fields[index5]);
-						}else{
-							if(item.key=='rybjlx'){
-								rybjlx = SelectedItem[0].value;
-							}
-							_this.isHideRzlc(item,val);
-						}
-					}else if(_this.tableForm.form.tableName.indexOf('出差申请')>-1){
-						_this.isHideCcsq(item);
-					}else if(_this.tableForm.form.tableName.indexOf('调动审批')>-1){
-						if(item.key=='dhrybjlx'){
-								rybjlx = SelectedItem[0].value;
-						}
-						_this.isHideDdlc(item,val);
-					}
-					
-				}) */
 			},
 //			主表下拉框
 			mainSelector(){
@@ -558,6 +548,7 @@
 					});
 			},*/
 			getSelectItemType(tableId,fieldName,item){
+				let _this = this;
 //				if(item.controlType=='11'||item.controlType=='14'){
 //					//显示、隐藏的字段
 //					if(this.tableForm.form.tableName.indexOf('入职申请')>-1&&item.key=='rybjlx'){
@@ -607,9 +598,10 @@
 						header:{'Content-Type':'application/json'},
 						async:false,
 						success:function(res){
+							console.log(11);
 							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if(res.code=='0'){
-								let ar = JSON.parse(res.data.options),ar2=[],text='';
+							if(res.data.code=='0'){
+								let ar = JSON.parse(res.data.data.options),ar2=[],text='';
 									for(let i=0;i<ar.length;i++){
 										ar2.push({
 											value:ar[i].key,
@@ -619,11 +611,13 @@
 											text = ar[i].value
 										}
 									}
+// 								_this.$set(_this.tableForm.form.fields[index],'text',text);	
+// 								_this.$set(_this.tableForm.form.fields[index],'options',ar2);	
 								item.text = text;
 								item.options = ar2;
 							}
 						}
-					});
+					},false);
 				}
 				
 			},
@@ -1863,29 +1857,6 @@
   		},
 	  }
 	}
-	var ar = [{"label":"1000元/月以下","value":"0000001000"},{"label":"1000-2000元/月","value":"0100002000"},{"label":"2001-4000元/月","value":"0200104000"},{"label":"4001-6000元/月","value":"0400106000"},{"label":"6001-8000元/月","value":"0600108000"},{"label":"8001-10000元/月","value":"0800110000"},{"label":"10001-15000元/月","value":"1000115000"},{"label":"15000-25000元/月","value":"1500125000"},{"label":"25000-35000元/月","value":"2500199999"},{"label":"35000-50000元/月","value":"3500150000"},{"label":"50000-70000元/月","value":"5000170000"},{"label":"70000-100000元/月","value":"70001100000"},{"label":"100000元/月以上","value":"100001150000"},{"label":"保密","value":"0000000000"}];
-	var obj={salary_start:25000,salary_end:35000}
-	var valuesAr=[],item,itemArr=[],v;
-	for(var i=0;i<ar.length;i++){
-		item = ar[i];
-		itemArr = item.label.split('-');
-		if(item.label.indexOf('以下')>-1){
-			if(!(obj.salary_start>=parseInt(item.label))){
-				valuesAr.push(item.value)
-			}
-		}else if(item.label.indexOf('以上')>-1){
-			if(!(obj.salary_end<=parseInt(item.label))){
-				valuesAr.push(item.value)
-			}
-		}else if(itemArr.length==2){
-			// if((itemArr[0]<obj.salary_end&&itemArr[0]>obj.salary_start)||(itemArr[1]<obj.salary_end&&itemArr[1]>obj.salary_start)){
-			if((itemArr[0]>obj.salary_start&&itemArr[0]<obj.salary_end)||(itemArr[0]>obj.salary_start&&itemArr[0]<obj.salary_end)){
-				valuesAr.push(item.value)
-			}
-		}
-	}
-	
-	
 	
 	
 	
@@ -1954,23 +1925,21 @@
 }
 
 
-
-
-	.inputSpan{
-		padding: 6px;
-		line-height: 21px;
-		display: inline-block;
-		width:62%;
-		word-wrap: break-word;
-    	word-break: break-all;
-	}
-	.red{
-		color: red;
-	}
-	.readOnly{
-		background: #f8f8f8;
-	}
-	.readOnly .lable{
-		background: none;
-	}
+.inputSpan{
+	padding: 6px;
+	line-height: 21px;
+	display: inline-block;
+	width:62%;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+.red{
+	color: red;
+}
+.readOnly{
+	background: #f8f8f8;
+}
+.readOnly .lable{
+	background: none;
+}
 </style>

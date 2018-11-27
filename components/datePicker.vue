@@ -5,8 +5,10 @@
         <!-- <view class="title">日期：{{year}}年{{month}}月{{day}}日</view> -->
 		<!-- <view class="mask" v-show="showMask" @click="hide"></view> -->
 		<view class="uni-flex picker_head" catchtouchmove="true">
-			<view class="uni-flex-item tl"><text class="text" @tap="cancel">取消</text></view>
-			<button type="primary" @tap="sureCallback" class="mui-btn1 primary" style="margin:0;border-radius:4px;">确定</button>
+			<view class="picker_head__action tl"><text class="text" @tap="cancel">取消</text></view>
+			<view class="picker_head__action"  >
+				<text @tap="sureCallback" style="color: #0093DD;">确定</text>
+			</view>
 		</view>
         <picker-view v-if="visible" indicator-style="height: 40px;" :value="value" @change="bindChange">
             <picker-view-column>
@@ -48,7 +50,7 @@
 			showDtPicker: {
 				type: Boolean,
 				default: false
-			}
+			},
 		},
         data: function () {
             const date = new Date()
@@ -267,16 +269,45 @@
     }
 	
 	.picker_head{
-		padding: 12upx 20upx;
-		height: 60upx;
-		border-bottom: 1px solid #DDDDDD;
+		display: flex;
+		padding: 9px 15px;
+		background-color: #fff;
+		position: relative;
+		text-align: center;
+		font-size: 17px;
+	}
+	.picker_head:after{
+		content: ' ';
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		height: 1px;
+		border-bottom: 1px solid #e5e5e5;
+		color: #e5e5e5;
+		transform-origin: 0 100%;
+		transform: scaleY(0.5);
+	}
+	.picker_head__action {
+		display: block;
+		flex: 1;
+		color: #1aad19;
+	}
+
+	.picker_head__action:first-child {
+		text-align: left;
+		color: #888;
+	}
+
+	.picker_head__action:last-child {
+		text-align: right;
 	}
 	.picker_head .text{
-		line-height:60rpx;
-		font-size:32rpx;
+		/* line-height:60rpx;
+		font-size:32rpx; */
 	}
 	.picker_head .mui-btn1{
-		line-height:60rpx;
+		/* line-height:60rpx; */
 	}
 	.popup {
 			position: fixed;
@@ -288,6 +319,7 @@
 		}
 	
 		.popup-bottom {
+			left: 0;
 			bottom: 0;
 			width: 100%;
 			height: 600upx;

@@ -279,7 +279,7 @@
 			bottom: 0;
 			left: 0;
 			overflow: hidden;
-			background-color: rgba(0, 0, 0, .3);
+			background-color: rgba(0, 0, 0, .6);
 		}
 		.link{
 			color: #0093DD;
@@ -311,5 +311,8 @@
 			color: #bbb;
 			-webkit-transform: translateY(-50%);
 			transform: translateY(-50%);
+		}
+		input[type=hidden]{
+			display: none;
 		}
 </style>

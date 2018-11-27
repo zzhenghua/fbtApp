@@ -121,10 +121,18 @@
         methods: {
             initPicker(valueArray) {
                 let pickerValueArray = valueArray;
-                this.pickerValue = this.pickerValueDefault;
+                // this.pickerValue = this.pickerValueDefault;
                 // 初始化多级联动
                 if (this.mode === 'selector') {
                     this.pickerValueSingleArray = valueArray;
+					//设置一级选择器的默认值，其它情况暂未考虑
+					if(this.pickerValueDefault){
+						for(let i=0;i<valueArray.length;i++){
+							if(valueArray[i].value==this.pickerValueDefault[0]){
+								this.pickerValue = [i];
+							}
+						}
+					}
                 } else if (this.mode === 'timeSelector') {
                     this.modeChange = false;
                     let hourArray = [];
