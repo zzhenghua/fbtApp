@@ -83,6 +83,9 @@
 		  		this.$refs.tableFormId.getSelectUser(data);
 		  	},
 			getList(){
+				uni.showLoading({
+					title:"加载中..."
+				})
 				let url = this.$path.LEAVECHECKFLOW;
 				let params = {
 					loginName:this.userInfo.loginName,
@@ -338,7 +341,7 @@
 	height: 100%;
 }
 .btnList {
-    padding: 3px 10px;
+    padding: 5px 10px;
 	background: #FFFFFF;
 }
 .tab_content{

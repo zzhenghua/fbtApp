@@ -40,13 +40,17 @@
 		        	
 		        	<!--文件上传-->
 		        	<view v-else-if="item.controlType==9" class="uni-flex-item inputText" style="font-size: 0;">
-		        		<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
-		        			<image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image>
-			        		<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;vertical-align: middle;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button>
-			        		<text style="vertical-align: middle;" class="mui-icon mui-icon-closeempty" @click="removeFile(item,$it)"></text>
-		        		</block>
-			        		<button class="mui-btn1 primary" type="primary" style="padding: 3px 8px;margin: 2px 5px;" @click="selectFile(item.key)">选择</button>
-			        		<input type="file" :name="item.key+'file'" multiple="multiple" style="width: 0px;height: 0px;opacity: 0;"  :id="item.key" @change="uploadFile(item)" accept="image/*"/>
+								<!-- {{item.value}} -->
+		        		<!-- <block  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it"> -->
+									<!-- {{unit.url}} -->
+								<view class="" v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
+									<text v-if="unit">11111{{unit}}</text>
+										<!-- <button class="mui-btn-link mui-ellipsis" style="max-width: 80%;vertical-align: middle;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button> -->
+										<!-- <text style="vertical-align: middle;" class="mui-icon mui-icon-closeempty" @click="removeFile(item,$it)"></text> -->
+								</view>
+			        		<!-- </block> -->
+			        		<button class="mui-btn1 primary" type="primary" style="padding: 3px 8px;margin: 2px 5px;" @click="uploadFile(item)">选择</button>
+			        		<!-- <input type="file" :name="item.key+'file'" multiple="multiple" style="width: 0px;height: 0px;opacity: 0;"  :id="item.key" @change="uploadFile(item)" accept="image/*"/> -->
 		        	</view>
 		        	
 		        	<!--日期控件-->
@@ -81,7 +85,7 @@
 	        	<block v-else>
 	        	<view class=" lable tr" v-if="item.isShow=='true'"><text class="red" v-if="item.isEdit=='true'&&item.isShow=='true'&&item.require=='true'">*</text> {{item.label}}</view>
 	        	<block v-if="item.isShow=='true'">
-	        		<text class="inputSpan c999" v-if="item.isEdit=='false'">获取select的值</text>
+	        		<text class="inputSpan c999" v-if="item.isEdit=='false'">{{item.value}}</text>
 	        		<block v-else>
 		        	<!--单行文本框-->
 		        	<view v-if="item.controlType==1||item.controlType==10" class="uni-flex-item inputText needsclick">
@@ -270,7 +274,7 @@
 			mpvuePicker,
 			datePicker
 		},
-		onLoad(){
+		created(){
 			this.fromPage="newForm";
 			
 			let isDraft = false;//是否为草稿
@@ -280,9 +284,6 @@
 				isDraft = true;
 			}
 			//初始化主表下拉字典
-			uni.showLoading({
-				title:"加载中..."
-			})
 			this.mainSelector();
 			//子表默认有一条数据
 			if(this.fromPage=='newForm'&&isDraft==false){
@@ -291,19 +292,41 @@
 					for(let i=0;i<subTableList.length;i++){
 						fields = subTableList[i].fields;
 						subTableList[i].data=[];
-						//初始化子表下拉框
+						//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
 						for (let k=0;k<fields.length;k++) {
 							this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
 							this.concatID(fields,k);
 						}
 						//费用报销表  先不显示子表
 						if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+							// console.log('subTableListfields:'+JSON.stringify(fields);
 							subTableList[i].data.push(this.$util.copyArr(fields));
 						}else{
 							subTableList[i].data = [];
 						}
-						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
 					}
+					
+					setTimeout(()=>{
+						for(let i=0;i<subTableList.length;i++){
+							fields = subTableList[i].fields;
+							subTableList[i].data=[];
+							//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
+							/* for (let k=0;k<fields.length;k++) {
+								this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
+								this.concatID(fields,k);
+							} */
+							//费用报销表  先不显示子表
+							if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+								// console.log('subTableListfields:'+JSON.stringify(fields);
+								subTableList[i].data.push(this.$util.copyArr(fields));
+							}else{
+								subTableList[i].data = [];
+							}
+						}
+						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
+						
+					},3000)
+						
 				
 			}else{
 				let subTableList = this.tableForm.form.subTableList,fields,dataList;
@@ -354,6 +377,7 @@
 					this.dtMode = 'date';
 				}
 				this.defaultTime = item.value;
+				// console.log(this.defaultTime);
 				this.dtPickerItem = item;
 				this.showDtPicker=true;
 				
@@ -547,7 +571,7 @@
 						}
 					});
 			},*/
-			getSelectItemType(tableId,fieldName,item){
+			getSelectItemType(tableId,fieldName,item,index){
 				let _this = this;
 //				if(item.controlType=='11'||item.controlType=='14'){
 //					//显示、隐藏的字段
@@ -615,6 +639,14 @@
 // 								_this.$set(_this.tableForm.form.fields[index],'options',ar2);	
 								item.text = text;
 								item.options = ar2;
+								// this.tableForm.form.subTableList[i].fields[k]
+								
+								/* setTimeout(function(){
+									_this.tableForm.form.subTableList[0].fields = [];
+									// _this.$set(_this.tableForm.form.fields[index],'text',text);
+								},3000) */
+								
+								console.log(JSON.stringify(item.options))
 							}
 						}
 					},false);
@@ -1175,6 +1207,7 @@
 			},
 	  		//选择附件
 	  		selectFile(key){
+					
 				window[key].click();
 				if(mui.os.ios){
 					document.getElementById(key).click();
@@ -1193,69 +1226,150 @@
 	  		//上传附件
 	  		uploadFile(item){
 	  			let _this = this;
-	  			let  currentTarget = event.currentTarget;
-//	  			let file = window[item.key].files[0];  //下面这种方式更好
-	  			let files = event.currentTarget.files;
-	  			let reader = new FileReader();
-		        let AllowImgFileSize = 10485760; //上传图片最大值(单位字节)（ 10 M = 10485760 B ）超过10M上传失败
-//		        let  file = files[0];
-		        let imgUrlBase64;
-		        let ar = item.value?JSON.parse(item.value):[];
-		        let  formdata=new FormData();
-		        
-		       	for(let i=0;i<files.length;i++){
-		       		if(AllowImgFileSize < files[i].size){
-		       			mui.toast( '上传失败，请上传不大于10M的图片！');
-		       			currentTarget.value = '';
-		                return;
-		       		}
-		       		formdata.append('photo',files[i]);
-		       	}
-		        if(this.tableForm.fileLimit&&(ar.length+files.length)>this.tableForm.fileLimit){
-		        	currentTarget.value = '';
-		        	return mui.toast('附件数最大不能超过'+this.tableForm.fileLimit);
-		        }
-		        if (files) {
-		           //执行上传操作
-                    _this.$util.showWaiting();
-
-					formdata.append("versionNo",_this.$path.VERSIONNO);
-					formdata.append ("loginName",_this.userInfo.loginName);
-					formdata.append ("fileId",'0');
-//					formdata.append("photo",files);
-					mui.ajax(_this.$path.LEAVEFLOWPHOTO,{
-						data:formdata,
-						type:'POST',//HTTP请求类型
-						timeout:20000,//超时时间设置为15秒；
-						processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
-   						contentType : false, // 不设置Content-type请求头
-						success:function(res){
-							_this.$util.closeWaiting();
-							if(res.code==0){
-								let data = res.data;
-								for(let i=0;i<data.length;i++){
-									ar.push({
-										url:data[i].filename,
-										id:data[i].id,
-										name:data[i].name,
+					uni.chooseImage({
+						success(res) {
+							let tempFilePaths = res.tempFilePaths;
+							let files = res.tempFiles;
+								let AllowImgFileSize = 10485760; //上传图片最大值(单位字节)（ 10 M = 10485760 B ）超过10M上传失败
+								let imgUrlBase64;
+								let ar = item.value?JSON.parse(item.value):[];
+								// let  formdata=new FormData();
+								
+								for(let i=0;i<files.length;i++){
+									if(AllowImgFileSize < files[i].size){
+										uni.showToast({
+											icon:"none",
+											title:'上传失败，请上传不大于10M的图片！'
+										});
+										return;
+									}
+									// formdata.append('photo',files[i]);
+								}
+								if(_this.tableForm.fileLimit&&(ar.length+files.length)>_this.tableForm.fileLimit){
+									return uni.showToast({
+											icon:"none",
+											title:'附件数最大不能超过'+this.tableForm.fileLimit
+										});
+								}
+								if (files) {
+									//执行上传操作
+										uni.showLoading({
+											title:"附件上传中..."
+										})		
+							/* formdata.append("versionNo",_this.$path.VERSIONNO);
+							formdata.append ("loginName",_this.userInfo.loginName);
+							formdata.append ("fileId",'0'); */
+							
+							uni.uploadFile({
+									url: _this.$path.LEAVEFLOWPHOTO,
+									filePath: tempFilePaths[0],
+									name: 'photo',
+									header:{'Content-Type':'application/json'},
+									formData: {
+											versionNo:_this.$path.VERSIONNO,
+											loginName:_this.userInfo.loginName,
+											token:_this.userInfo.token,
+											fileId:'0'
+									},
+									success:function(res){
+										uni.hideLoading();
+										let resdata = JSON.parse(res.data);
+										console.log(JSON.stringify(resdata));
+										
+										item.value = resdata;
+										if(resdata.code==0){
+											let data = resdata.data;
+											for(let i=0;i<data.length;i++){
+												ar.push({
+													url:data[i].filename,
+													id:data[i].id,
+													name:data[i].name,
+												})
+											}
+											console.log(JSON.stringify(item))
+											item.value = JSON.stringify(ar);
+										}else{
+											uni.showToast({
+												icon:"none",
+												title:resdata.message
+											})
+										}
+									},
+									fail:function(xhr,type,errorThrown){
+										uni.showToast({
+											icon:"none",
+											title:"附件上传失败"
+										})
+									}
+							});
+							
+						/* uni.request({
+								url: _this.$path.LEAVEFLOWPHOTO,
+								data: {
+										data:{
+											versionNo:_this.$path.VERSIONNO,
+											loginName:_this.userInfo.loginName,
+											token:_this.userInfo.token,
+											fileId:'0',
+											photo:files
+										}
+								},
+								dataType:'json',//服务器返回json格式数据
+								method:'POST',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；
+								header:{'Content-Type':'application/json'},
+								async:false,
+								success: (res) => {
+										console.log(res.data);
+										this.text = 'request success';
+								}
+						}); */
+							
+							/* uni.request({
+								url:_this.$path.LEAVEFLOWPHOTO,
+								data:formdata,
+								method:'POST',//HTTP请求类型
+								timeout:20000,//超时时间设置为15秒；
+								processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+								contentType : false, // 不设置Content-type请求头
+								success:function(res){
+									uni.hideLoading();
+									if(res.data.code==0){
+										let data = res.data.data;
+										for(let i=0;i<data.length;i++){
+											ar.push({
+												url:data[i].filename,
+												id:data[i].id,
+												name:data[i].name,
+											})
+										}
+										item.value = JSON.stringify(ar);
+									}else{
+										uni.showToast({
+											icon:"none",
+											title:res.data.message
+										})
+									}
+								},
+								fail:function(xhr,type,errorThrown){
+									uni.showToast({
+										icon:"none",
+										title:"附件上传失败"
 									})
 								}
-								item.value = JSON.stringify(ar);
-							}else{
-								mui.toast(res.message);
-							}
-							currentTarget.value = '';
-						},
-						error:function(xhr,type,errorThrown){
-							console.log(type);
-							_this.$util.closeWaiting();
-							if(type=='timeout'){
-								mui.toast('请求超时,请检查网络');
-							}
-							currentTarget.value = '';
+							}); */
+							
+							
+							
+							
 						}
-					});
-		         } 
+						}
+					})
+	  			// let  currentTarget = event.currentTarget;
+	  			
+					
+					
+		        
 	  		},
 	  		previewImg(imgDom){
 	  			let img = this.$refs[imgDom][0];

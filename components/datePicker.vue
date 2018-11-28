@@ -156,38 +156,11 @@
 				return [ this.year-1990, this.month-1, this.day-1, this.hour, this.minute, this.second]
 			}
 		},
+// 		onShow(){
+// 			
+// 		},
 		onLoad() {
-			console.log("defaultTime:"+this.defaultTime)
 			
-			//设置默认值
-			if(this.defaultTime){
-				console.log(this.defaultTime);
-				console.log(this.defaultTime);
-				let ymd = this.defaultTime.split(' ')[0];
-				let hms = this.defaultTime.split(' ')[1];
-				if(ymd.split('-')[0]){
-					this.year = ymd.split('-')[0];
-				}
-				if(ymd.split('-')[1]){
-					this.month = ymd.split('-')[1];
-				}
-				if(ymd.split('-')[2]){
-					this.day = ymd.split('-')[2];
-				}else{
-					this.day = 1;
-				}
-				if(hms){
-					if(hms.split(':')[0]){
-						this.hour = ymd.split('-')[0];
-					}
-					if(hms.split(':')[1]){
-						this.minute = ymd.split('-')[1];
-					}
-					if(hms.split(':')[2]){
-						this.second = ymd.split('-')[2];
-					}
-				}
-			}
 			
 // 			setTimeout(()=>{
 // 				this.animate = true;
@@ -253,7 +226,44 @@
 				}
 				this.$emit('sureDtPicker',dateStr);
 			}
-        }
+        },
+		watch:{
+			showDtPicker(){
+				if(this.showDtPicker){
+					console.log("defaultTime:"+this.defaultTime)
+					
+					//设置默认值
+					if(this.defaultTime){
+						console.log(this.defaultTime);
+						console.log(this.defaultTime);
+						let ymd = this.defaultTime.split(' ')[0];
+						let hms = this.defaultTime.split(' ')[1];
+						if(ymd.split('-')[0]){
+							this.year = ymd.split('-')[0];
+						}
+						if(ymd.split('-')[1]){
+							this.month = ymd.split('-')[1];
+						}
+						if(ymd.split('-')[2]){
+							this.day = ymd.split('-')[2];
+						}else{
+							this.day = 1;
+						}
+						if(hms){
+							if(hms.split(':')[0]){
+								this.hour = ymd.split('-')[0];
+							}
+							if(hms.split(':')[1]){
+								this.minute = ymd.split('-')[1];
+							}
+							if(hms.split(':')[2]){
+								this.second = ymd.split('-')[2];
+							}
+						}
+					}
+				}
+			}
+		}
     }
 </script>
 
@@ -331,11 +341,11 @@
 			transform: translateY(0);
 		}
 	
-		.popup-bottom text {
+		/* .popup-bottom text {
 			line-height: 80upx;
 			font-size: 32upx;
 			color: #888888;
-		}
+		} */
 	
 		.popup .list-view {
 			height: 600upx;
