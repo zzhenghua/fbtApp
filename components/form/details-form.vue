@@ -268,7 +268,36 @@
 			}
 		},
 		computed:{
-			...mapState(['userInfo'])
+			...mapState(['userInfo']),
+			tableFormToo(){
+				
+				let tableForm2 = Object.assign({},this.tableForm);
+// 				let fields = tableForm2.form.fields;
+// 				let tableId = tableForm2.form.tableId;
+// 				for(let i=0;i<fields.length;i++){
+// 					if(fields[i].controlType=='11'||fields[i].controlType=='14'){
+// 						fields[i].text="";
+// 						fields[i].options=[];
+// 					}
+// 				}
+// 				let subTableList = tableForm2.form.subTableList,fields2;
+// 				for(let i=0;i<subTableList.length;i++){
+// 					fields2 = subTableList[i].fields;
+// 					subTableList[i].data=[];
+// 					//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
+// 					if(!fields2){
+// 						continue
+// 					}
+// 					for (let k=0;k<fields2.length;k++) {
+// 						if(fields2[k].controlType=='11'||fields2[k].controlType=='14'){
+// 							fields2[k].text="";
+// 							fields2[k].options=[];
+// 						}
+// 					}
+// 					}
+				// console.log("----:"+JSON.stringify(tableForm2))
+				return tableForm2
+			}
 		},
 		components:{
 			mpvuePicker,
@@ -283,6 +312,10 @@
 				this.fromPage="newForm";//为了沿用newForm的数据绑定
 				isDraft = true;
 			}
+			
+			this.initTableForm();
+			
+			
 			//初始化主表下拉字典
 			this.mainSelector();
 			//子表默认有一条数据
@@ -306,26 +339,26 @@
 						}
 					}
 					
-					setTimeout(()=>{
-						for(let i=0;i<subTableList.length;i++){
-							fields = subTableList[i].fields;
-							subTableList[i].data=[];
-							//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
-							/* for (let k=0;k<fields.length;k++) {
-								this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
-								this.concatID(fields,k);
-							} */
-							//费用报销表  先不显示子表
-							if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
-								// console.log('subTableListfields:'+JSON.stringify(fields);
-								subTableList[i].data.push(this.$util.copyArr(fields));
-							}else{
-								subTableList[i].data = [];
-							}
-						}
-						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
-						
-					},1000)
+// 					setTimeout(()=>{
+// 						for(let i=0;i<subTableList.length;i++){
+// 							fields = subTableList[i].fields;
+// 							subTableList[i].data=[];
+// 							//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
+// 							/* for (let k=0;k<fields.length;k++) {
+// 								this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
+// 								this.concatID(fields,k);
+// 							} */
+// 							//费用报销表  先不显示子表
+// 							if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+// 								// console.log('subTableListfields:'+JSON.stringify(fields);
+// 								subTableList[i].data.push(this.$util.copyArr(fields));
+// 							}else{
+// 								subTableList[i].data = [];
+// 							}
+// 						}
+// 						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
+// 						
+// 					},1000)
 						
 				
 			}else{
@@ -366,6 +399,31 @@
 			//console.log(this.tableForm.form.subTableList)
 		},
 	  	methods:{
+				initTableForm(){
+					let fields = this.tableForm.form.fields;
+					let tableId = this.tableForm.form.tableId;
+					for(let i=0;i<fields.length;i++){
+						if(fields[i].controlType=='11'||fields[i].controlType=='14'){
+							fields[i].text="";
+							fields[i].options=[];
+						}
+					}
+					let subTableList = this.tableForm.form.subTableList,fields2;
+					for(let i=0;i<subTableList.length;i++){
+						fields2 = subTableList[i].fields;
+						subTableList[i].data=[];
+						//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
+						if(!fields2){
+							continue
+						}
+						for (let k=0;k<fields2.length;k++) {
+							if(fields2[k].controlType=='11'||fields2[k].controlType=='14'){
+								fields2[k].text="";
+								fields2[k].options=[];
+							}
+						}
+						}
+				},
 			dateKj(item,fileData){
 				// debugger
 				let _this = this;
