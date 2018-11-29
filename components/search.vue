@@ -71,7 +71,7 @@
 	top:3px;
 	left:3px;
 	font-weight:bold;
-	color: #0093DD;
+	color: #999;
 }
 .closeIcon{
 	position:absolute;

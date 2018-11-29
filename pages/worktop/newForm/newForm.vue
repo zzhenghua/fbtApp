@@ -19,7 +19,9 @@
 			</scroll-view>
 		</view>
 		<view class="tab_content" style="" v-if="currentTab==1">
-			
+			<view class="uni-content-padded tc">
+				<image :src="images" mode="widthFix" @tap="previewImage(images)"></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -49,7 +51,7 @@
 			    'userInfo',
 			]),
 			images(){
-				return this.$path.BPMIMAGEPROCESSINSTANCEID+'?processInstanceId='+this.processInstanceId+'&v='+(new Date().getTime());
+				return this.$path.BPMIMAGEPROCESSINSTANCEID+'?processInstanceId='+this.definitionId+'&v='+(new Date().getTime());
 				//processInstanceId
 			}
 			
@@ -67,6 +69,11 @@
 			//点击tab
 			onClickItem(index){
 				this.currentTab = index;
+			},
+			previewImage(url){
+				uni.previewImage({
+					urls: [url]
+				});
 			},
 			showUserPop(pam){
 				this.showSelectUser = true;

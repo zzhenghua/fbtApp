@@ -5,9 +5,9 @@
         <!-- <view class="title">日期：{{year}}年{{month}}月{{day}}日</view> -->
 		<!-- <view class="mask" v-show="showMask" @click="hide"></view> -->
 		<view class="uni-flex picker_head" catchtouchmove="true">
-			<view class="picker_head__action tl"><text class="text" @tap="cancel">取消</text></view>
-			<view class="picker_head__action"  >
-				<text @tap="sureCallback" style="color: #0093DD;">确定</text>
+			<view class="picker_head__action tl" @tap="cancel">取消</view>
+			<view class="picker_head__action" @tap="sureCallback" style="color: #0093DD;">
+				确定
 			</view>
 		</view>
         <picker-view v-if="visible" indicator-style="height: 40px;" :value="value" @change="bindChange">

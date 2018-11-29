@@ -8,7 +8,7 @@
 			<scroll-view scroll-y style="height: calc(100% - 95px);">
 				<view class="uni-list">
 					<view class="uni-list-cell" v-for="(item,index2) in list" :key="index2">
-						<navigator class="uni-list-cell-navigate uni-navigate-right" url="">
+						<navigator class="uni-list-cell-navigate uni-navigate-right" :url="'../apply_details/apply_details?types=myApply'+index+'&taskId='+item.taskId+'&runId='+item.runId">
 							<view class="">
 								<view class="uni-ellipsis-2 normal font16">{{item.subject}}</view>
 								<view class="c999">{{item.processName}}</view>
@@ -62,7 +62,10 @@
 			searchView
 		},
 		onLoad() {
-			this.getList();
+			this.currentTab = 0;
+			setTimeout(()=>{
+				this.getList();
+			},300)
 		},
 		methods:{
 			//点击tab

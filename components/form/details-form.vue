@@ -12,7 +12,7 @@
 	        		<!--不可编辑-->
 	        		<block v-if="item.isEdit=='false'">
 	        			<block v-if="item.controlType==9">
-	        				<text class="inputSpan c999">
+	        				<view class="uni-flex-item inputSpan c999">
 		        				<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
 		        					<!-- <block v-if="unit.url">
 		        						<image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image>
@@ -22,7 +22,7 @@
 				        			<text class="inputSpan c999" v-else>{{unit.name}}</text> -->
 				        		</block>
 				        		<!-- <text v-else >{{item.value}}</text> -->
-	        				</text>
+	        				</view>
 	        			</block>
 	        			<view class="uni-flex-item inputSpan c999" v-else>{{item.value}}</view>
 	        		</block>
@@ -85,7 +85,7 @@
 	        	<block v-else>
 	        	<view class=" lable tr" v-if="item.isShow=='true'"><text class="red" v-if="item.isEdit=='true'&&item.isShow=='true'&&item.require=='true'">*</text> {{item.label}}</view>
 	        	<block v-if="item.isShow=='true'">
-	        		<text class="inputSpan c999" v-if="item.isEdit=='false'">{{item.value}}</text>
+	        		<view class="uni-flex-item inputSpan c999" v-if="item.isEdit=='false'">{{item.value}}</view>
 	        		<block v-else>
 		        	<!--单行文本框-->
 		        	<view v-if="item.controlType==1||item.controlType==10" class="uni-flex-item inputText needsclick">
@@ -325,7 +325,7 @@
 						}
 						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
 						
-					},3000)
+					},1000)
 						
 				
 			}else{
@@ -666,127 +666,130 @@
 			},
 			//特殊处理：入职申请流程>工作地
 			getGzdsLczx(item){
-				mui.ajax(this.$path.SELECTCUSTOMDEPTADDRESS,{
+				uni.request({
+						url:this.$path.SELECTCUSTOMDEPTADDRESS,
 						data:{
 							data:{
-								deptId:sskhbm,
-								loginName:this.userInfo.loginName,
-								token:this.userInfo.token,
-								versionNo:this.$path.VERSIONNO
-							}
-						},
-						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
-						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json'},
-						async:false,
-						success:function(res){
-							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if(res.code=='0'){
-								let ar = res.data.data,ar2=[],text='';
-									for(let i=0;i<ar.length;i++){
-										ar2.push({
-											value:ar[i].id,
-											label:ar[i].address
-										})
-										if(item.value&&item.value==ar[i].id){
-											text = ar[i].address
+									deptId:sskhbm,
+									loginName:this.userInfo.loginName,
+									token:this.userInfo.token,
+									versionNo:this.$path.VERSIONNO
+							}},
+							dataType:'json',//服务器返回json格式数据
+							method:'POST',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							header:{'Content-Type':'application/json'},
+							async:false,
+							success:function(res){
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								let resdata = res.data;
+								if(resdata.code=='0'){
+									let ar = resdata.data.data,ar2=[],text='';
+										for(let i=0;i<ar.length;i++){
+											ar2.push({
+												value:ar[i].id,
+												label:ar[i].address
+											})
+											if(item.value&&item.value==ar[i].id){
+												text = ar[i].address
+											}
 										}
-									}
-								item.text = text;
-								item.options = ar2;
+									item.text = text;
+									item.options = ar2;
+								}
+							},
+							fail:function(xhr,type,errorThrown){
+								//异常处理；
+								// console.log(type);
 							}
-						},
-						error:function(xhr,type,errorThrown){
-							//异常处理；
-							console.log(type);
-						}
-					});
+						},false);
 			},
 			//入职流程》获取所属归属部门
 			getSsgsbmLczx(item,callback,bm){
 				//因为这里需要同步请求，所以改用mui.ajax 。异步请求给item赋值后界面不生效
-					mui.ajax(this.$path.SELECTCUSTOMERDEPTLIST,{
+				uni.request({
+						url:this.$path.SELECTCUSTOMERDEPTLIST,
 						data:{
 							data:{
-								customerDeptName:'',
-								customerCode:bm?bm:khbm,
-								loginName:this.userInfo.loginName,
-								token:this.userInfo.token,
-								versionNo:this.$path.VERSIONNO
-							}
-						},
-						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
-						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json'},
-						async:false,
-						success:function(res){
-							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if(res.code=='0'){
-								let ar = res.data.data,ar2=[],text='';
-									for(let i=0;i<ar.length;i++){
-										ar2.push({
-											value:ar[i].id,
-											label:ar[i].name
-										})
-										if(item.value&&item.value==ar[i].id){
-											text = ar[i].name
+									customerDeptName:'',
+									customerCode:bm?bm:khbm,
+									loginName:this.userInfo.loginName,
+									token:this.userInfo.token,
+									versionNo:this.$path.VERSIONNO
+							}},
+							dataType:'json',//服务器返回json格式数据
+							method:'POST',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							header:{'Content-Type':'application/json'},
+							async:false,
+							success:function(res){
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								let resdata = res.data;
+								if(resdata.code=='0'){
+									let ar = resdata.data.data,ar2=[],text='';
+										for(let i=0;i<ar.length;i++){
+											ar2.push({
+												value:ar[i].id,
+												label:ar[i].name
+											})
+											if(item.value&&item.value==ar[i].id){
+												text = ar[i].name
+											}
 										}
+									item.text = text;
+									item.options = ar2;
+									if(callback){
+										callback();
 									}
-								item.text = text;
-								item.options = ar2;
-								if(callback){
-									callback();
 								}
+							},
+							fail:function(xhr,type,errorThrown){
+								//异常处理；
+								// console.log(type);
 							}
-						},
-						error:function(xhr,type,errorThrown){
-							//异常处理；
-							console.log(type);
-						}
-					});
+						},false);
 			},
 			//入职流程》岗位级别
 			getGwjbLczx(item){
 				//因为这里需要同步请求，所以改用mui.ajax 。异步请求给item赋值后界面不生效
-					mui.ajax(this.$path.SELECTRANKLIST,{
+				uni.request({
+						url:this.$path.SELECTRANKLIST,
 						data:{
 							data:{
-								rankCode:'',
-								rankName:'',
-								loginName:this.userInfo.loginName,
-								token:this.userInfo.token,
-								versionNo:this.$path.VERSIONNO
-							}
-						},
-						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
-						timeout:10000,//超时时间设置为10秒；
-						headers:{'Content-Type':'application/json'},
-						async:false,
-						success:function(res){
-							//服务器返回响应，根据响应结果，分析是否登录成功；
-							if(res.code=='0'){
-								let ar = res.data.data,ar2=[],text='';
-									for(let i=0;i<ar.length;i++){
-										ar2.push({
-											value:ar[i].name,
-											label:ar[i].name
-										})
-										if(item.value&&item.value==ar[i].name){
-											text = ar[i].name
+									rankCode:'',
+									rankName:'',
+									loginName:this.userInfo.loginName,
+									token:this.userInfo.token,
+									versionNo:this.$path.VERSIONNO
+							}},
+							dataType:'json',//服务器返回json格式数据
+							method:'POST',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							header:{'Content-Type':'application/json'},
+							async:false,
+							success:function(res){
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								let resdata = res.data;
+								if(resdata.code=='0'){
+									let ar = resdata.data.data,ar2=[],text='';
+										for(let i=0;i<ar.length;i++){
+											ar2.push({
+												value:ar[i].name,
+												label:ar[i].name
+											})
+											if(item.value&&item.value==ar[i].name){
+												text = ar[i].name
+											}
 										}
-									}
-								item.text = text;
-								item.options = ar2;
+									item.text = text;
+									item.options = ar2;
+								}
+							},
+							fail:function(xhr,type,errorThrown){
+								//异常处理；
+								// console.log(type);
 							}
-						},
-						error:function(xhr,type,errorThrown){
-							//异常处理；
-							console.log(type);
-						}
-					});
+						},false);
 			},
 			//校验打卡记录是否有效
 			checkClock(fileData){
@@ -806,7 +809,7 @@
 			  			empNo:this.userInfo.loginName,
 						clockTime:jbsjfsrq ,
 						type:jbfymc
-					}).then((res)=>{
+					},(res)=>{
 						if(res.data.isValid=='false'){
 							files[dkjl_i].value = "无效";
 						}else if(res.data.isValid=='true'){
@@ -814,7 +817,7 @@
 						}else{
 							mui.toast('打卡记录验证出错，请联系管理员！')
 						}
-					}).catch((error)=> {
+					},(error)=> {
 					});
 				}
 			},
@@ -1899,7 +1902,7 @@
 	     	this.$ajax.post(this.$path.SELECTLEAVEREASON,{
 	     		loginName:this.userInfo.loginName,
 	     		code:key
-	     	}).then((res)=>{
+	     	},(res)=>{
 				let data = res.data.sysLeaveReasonList,op=[],mainFileds=_this.tableForm.form.fields;
 				for(let i=0;i<data.length;i++){
 					op.push({
@@ -1915,7 +1918,7 @@
 					}
 				}
 				this.tableForm.form.fields=this.$util.copyArr(mainFileds);//这里不加的话，data下面的数据绑定会失效
-			}).catch((error)=> {
+			},(error)=> {
 			
 			});
 	     },
