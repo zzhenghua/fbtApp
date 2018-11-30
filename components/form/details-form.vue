@@ -24,7 +24,7 @@
 				        		<!-- <text v-else >{{item.value}}</text> -->
 	        				</view>
 	        			</block>
-	        			<view class="uni-flex-item inputSpan c999" v-else>{{item.value}}</view>
+	        			<view class="uni-flex-item inputSpan c999" v-else>{{item.text||item.value}}</view>
 	        		</block>
 	        		<block v-else>
 		        	<!--单行文本框-->
@@ -315,7 +315,6 @@
 			
 			this.initTableForm();
 			
-			
 			//初始化主表下拉字典
 			this.mainSelector();
 			//子表默认有一条数据
@@ -339,26 +338,26 @@
 						}
 					}
 					
-// 					setTimeout(()=>{
-// 						for(let i=0;i<subTableList.length;i++){
-// 							fields = subTableList[i].fields;
-// 							subTableList[i].data=[];
-// 							//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
-// 							/* for (let k=0;k<fields.length;k++) {
-// 								this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
-// 								this.concatID(fields,k);
-// 							} */
-// 							//费用报销表  先不显示子表
-// 							if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
-// 								// console.log('subTableListfields:'+JSON.stringify(fields);
-// 								subTableList[i].data.push(this.$util.copyArr(fields));
-// 							}else{
-// 								subTableList[i].data = [];
-// 							}
-// 						}
-// 						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
-// 						
-// 					},1000)
+					setTimeout(()=>{
+						for(let i=0;i<subTableList.length;i++){
+							fields = subTableList[i].fields;
+							subTableList[i].data=[];
+							//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
+							/* for (let k=0;k<fields.length;k++) {
+								this.getSelectItemType(subTableList[i].tableId,fields[k].key,fields[k]);
+								this.concatID(fields,k);
+							} */
+							//费用报销表  先不显示子表
+							if(this.tableForm.form.tableName.indexOf('费用报销表')==-1){
+								// console.log('subTableListfields:'+JSON.stringify(fields);
+								subTableList[i].data.push(this.$util.copyArr(fields));
+							}else{
+								subTableList[i].data = [];
+							}
+						}
+						this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，data下面的数据绑定会失效
+						
+					},1500)
 						
 				
 			}else{
@@ -385,18 +384,22 @@
 						subTableList[i].data[u] = this.$util.copyArr(fields);
 						for (let k=0;k<fields.length;k++) {
 							subTableList[i].data[u][k].value = dataList[u][fields[k].key];
-//							console.log(dataList[u][fields[k].key])
-//							
-//							if(fields[k].controlType=='11'&&fields[i].isEdit){
-//								this.getSelectItemType(subTableList[i].tableId,fields[k].key,subTableList[i].data[u][k]);
-//							}
-//							this.concatID(subTableList[i].data[u],k,dataList[u][fields[k].key+'ID']);
+							if(subTableList[i].data[u][k].options&&(subTableList[i].data[u][k].options.length>-1)){
+								for(let p=0;p<subTableList[i].data[u][k].options.length;p++){
+									if(subTableList[i].data[u][k].options[p].value==subTableList[i].data[u][k].value){
+										subTableList[i].data[u][k].text = subTableList[i].data[u][k].options[p].label;
+									}
+								}
+							}
 						}
 					}
 				}
 				this.tableForm.form.subTableList=this.$util.copyArr(subTableList);//这里不加的话，草稿页面的子表里日期绑定会失效
 			}
-			//console.log(this.tableForm.form.subTableList)
+			
+// 			setTimeout(()=>{
+// 				console.log(JSON.stringify(this.tableForm));
+// 			},5000)
 		},
 	  	methods:{
 				initTableForm(){
@@ -408,6 +411,8 @@
 							fields[i].options=[];
 						}
 					}
+					this.tableForm.form.fields = this.$util.copyArr(fields);//这里不加的话
+
 					let subTableList = this.tableForm.form.subTableList,fields2;
 					for(let i=0;i<subTableList.length;i++){
 						fields2 = subTableList[i].fields;
@@ -423,6 +428,7 @@
 							}
 						}
 						}
+						this.tableForm.form.subTableList = this.$util.copyArr(subTableList);//这里不加的话
 				},
 			dateKj(item,fileData){
 				// debugger
@@ -534,17 +540,11 @@
 				let fields = this.tableForm.form.fields;
 				let tableId = this.tableForm.form.tableId;
 				for(let i=0;i<fields.length;i++){
-					_this.getSelectItemType(tableId,fields[i].key,fields[i]);
-					//如果是部门、用户选择器，则拼接~ID字段
-					_this.concatID(fields,i);
-					/*if([4,8,17,5,18,6,19,7].indexOf(fields[i].controlType)>-1){
-						fields.push({
-							key:fields[i].key+'IDE',
-							label:fields[i].label+'IDE',
-							controlType:16,
-							value:''
-						})
-					}*/
+					if(fields[i].key!="lzyyyggx"){
+						_this.getSelectItemType(tableId,fields[i].key,fields[i]);
+						//如果是部门、用户选择器，则拼接~ID字段
+						_this.concatID(fields,i);
+					}
 					//特殊处理：离职流程>离职原因
 					if(fields[i].key=="lzlxyggx"){
 						_this.LzGetReasons(fields[i].value);
@@ -1959,23 +1959,33 @@
 	     	let _this = this;
 	     	this.$ajax.post(this.$path.SELECTLEAVEREASON,{
 	     		loginName:this.userInfo.loginName,
+	     		token:this.userInfo.token,
 	     		code:key
 	     	},(res)=>{
-				let data = res.data.sysLeaveReasonList,op=[],mainFileds=_this.tableForm.form.fields;
+				let data = res.data.sysLeaveReasonList,op=[],mainFileds=_this.tableForm.form.fields,findex;
+				for(let i=0;i<mainFileds.length;i++){
+					if(mainFileds[i].key=='lzyyyggx'){
+						findex = i;
+// 						_this.tableForm.form.fields[i].options=op;
+// 						_this.tableForm.form.fields[i].text='';
+						break;
+					}
+				}
 				for(let i=0;i<data.length;i++){
 					op.push({
 						label:data[i].name,
 						value:data[i].code
 					})
-				}
-				for(let i=0;i<mainFileds.length;i++){
-					if(mainFileds[i].key=='lzyyyggx'){
-						this.tableForm.form.fields[i].options=op;
-						this.tableForm.form.fields[i].text='';
-						break;
+					if(findex&&(_this.tableForm.form.fields[findex].value===data[i].code)){
+						_this.tableForm.form.fields[findex].text = data[i].name;
 					}
 				}
-				this.tableForm.form.fields=this.$util.copyArr(mainFileds);//这里不加的话，data下面的数据绑定会失效
+				if(findex){
+					_this.tableForm.form.fields[findex].controlType='11';
+					_this.tableForm.form.fields[findex].options=op;
+				}
+				
+				// this.tableForm.form.fields=this.$util.copyArr(mainFileds);//这里不加的话，data下面的数据绑定会失效
 			},(error)=> {
 			
 			});
