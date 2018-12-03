@@ -3,7 +3,7 @@
 		<!--新建流程表单-->
 	        <!-- <block > -->
 	        	 <!--主表-->
-	        <view v-if="tableForm.form"  v-for="(item,$index) in tableForm.form.fields" :key="$index" :class="{'uni-flex':item.controlType!=16&&item.isShow=='true',readOnly:item.isEdit=='false'}">
+	        <view v-if="tableFormToo.form"  v-for="(item,$index) in tableFormToo.form.fields" :key="$index" :class="{'uni-flex':item.controlType!=16&&item.isShow=='true',readOnly:item.isEdit=='false'}">
 	        	<!--隐藏域-->
 	        	<input v-if="item.controlType==16" type="hidden"  :name="item.key" v-model.trim="item.value">
 	        	<block v-else>
@@ -13,13 +13,13 @@
 	        		<block v-if="item.isEdit=='false'">
 	        			<block v-if="item.controlType==9">
 	        				<view class="uni-flex-item inputSpan c999">
-		        				<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in jsonToObj(item.value)" :key="$it">
-		        					<!-- <block v-if="unit.url">
-		        						<image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image>
-					        			<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;" @click="previewImg(item.key+'img'+$it)">{{unit.url}}</button>
+		        				<block v-if="item.value.indexOf('[')>-1"  v-for="(unit,$it) in pzList" :key="$it">
+		        					<block v-if="unit.url">
+		        						<!-- <image :src="unit.url" v-if="item.value" data-preview-src="" :data-preview-group="item.key" style="width: 0px;height: 0px;" :ref="item.key+'img'+$it"></image> -->
+					        			<button class="mui-btn-link mui-ellipsis" style="max-width: 80%;" @click="previewImg(item.key+'img'+$it)">{{unit.urlName}}</button>
 		        					
 									</block>
-				        			<text class="inputSpan c999" v-else>{{unit.name}}</text> -->
+				        			<text class="inputSpan c999" v-else>{{unit.name}}</text>
 				        		</block>
 				        		<!-- <text v-else >{{item.value}}</text> -->
 	        				</view>
@@ -75,7 +75,7 @@
 	        </view>
 	        
 	        <!--子表-->
-	        <block v-if="tableForm.form.subTableList" v-for="(subtable,$i) in tableForm.form.subTableList" :key="$i">
+	        <block v-if="tableFormToo.form.subTableList" v-for="(subtable,$i) in tableFormToo.form.subTableList" :key="$i">
 	        <view v-if="subtable.data&&subtable.data.length>0" style="padding: 10px;margin-top:10px;    box-shadow: 0px 0px 10px #ddd;">
 	        <h5>{{subtable.tableDesc}}</h5>
 	        <view class="subItem"  v-for="(dataList,$it) in subtable.data" :key="$it">
@@ -85,7 +85,7 @@
 	        	<block v-else>
 	        	<view class=" lable tr" v-if="item.isShow=='true'"><text class="red" v-if="item.isEdit=='true'&&item.isShow=='true'&&item.require=='true'">*</text> {{item.label}}</view>
 	        	<block v-if="item.isShow=='true'">
-	        		<view class="uni-flex-item inputSpan c999" v-if="item.isEdit=='false'">{{item.value}}</view>
+	        		<view class="uni-flex-item inputSpan c999" v-if="item.isEdit=='false'">{{item.text||item.value}}</view>
 	        		<block v-else>
 		        	<!--单行文本框-->
 		        	<view v-if="item.controlType==1||item.controlType==10" class="uni-flex-item inputText needsclick">
@@ -130,7 +130,7 @@
 	        	<button class="mui-btn1 primary" type="primary" style="padding: 5px; margin-right: 10px;" v-if="subtable.data.length>1" @click="removeSubtableList($i)">删除</button>
 	        	<button class="mui-btn1 primary" type="primary" style="padding: 5px;" @click="addSubtableList($i)">添加</button>
 	        </view>
-	        <view class="mui-content-padded cred font12" v-if="tableForm.form.tableName.indexOf('销假申请表')>-1&&(fromPage=='newForm'||isFirstNode)">
+	        <view class="mui-content-padded cred font12" v-if="tableFormToo.form.tableName.indexOf('销假申请表')>-1&&(fromPage=='newForm'||isFirstNode)">
 	        	<view>说明：请假小时折算公式：请假小时数/应出勤工作小时数。(若不清楚应出勤工作小时请联系员工关系)</view>
 	        	<view>如：请假1天3小时，天数填：1.375  备注填：1天3小时;</view>
 				<view>产假、婚假，天数填自然日天数，其他假，天数填工作日天数。</view>
@@ -138,7 +138,7 @@
 	        </view>
 	        </block>
 	        <!-- </block> -->
-			<mpvue-picker :themeColor="themeColor" ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueDefault="pickerValueDefault"
+			<mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueDefault="pickerValueDefault"
 			@onConfirm="onConfirm" @onCancel="onCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 			<date-picker ref="dtPicker" :dtMode="dtMode" :showDtPicker="showDtPicker" :defaultTime="defaultTime" @hideDtPicker="hideDtPicker" @sureDtPicker="sureDtPicker"></date-picker>
 	</view>
@@ -148,6 +148,7 @@
 	import { mapState,mapMutations } from 'vuex'
 	import mpvuePicker from "../mpvuePicker.vue"
 	import datePicker from "../datePicker.vue"
+	import {MXdatePicker,MXmpvuePicker} from "../../common/mixins.js"
 	
 	//是否为json数据
 	const isJSON = (str)=>{
@@ -231,6 +232,7 @@
 	
 	let fybxlx;//费用报销》报销类型
 	export default{
+		mixins:[MXdatePicker,MXmpvuePicker],
 		name: 'detailsForm',
 		props:{
 			fromPageType:{
@@ -255,46 +257,71 @@
 			return {
 				currentSelectPop:'',
 				fromPage:'',
-				
-				pickerValueArray:[],//选择框
-				mode:'',
-				deepLength:'',
-				pickerValueDefault:'',
-				pickerItem:'',
-				showDtPicker:false,//日期选择框
-				defaultTime:'',
-				dtPickerItem:'',
-				dtMode:'minute'
+// 				pickerValueArray:[],//数据字典选择框
+// 				mode:'',
+// 				deepLength:'',
+// 				pickerValueDefault:'',
+				pickerItem:'',//当前正在操作的item
+// 				showDtPicker:false,//日期选择框
+// 				defaultTime:'',
+// 				dtMode:'minute',
+				dtPickerItem:''//当前正在操作的item
 			}
 		},
 		computed:{
 			...mapState(['userInfo']),
 			tableFormToo(){
 				
-				let tableForm2 = Object.assign({},this.tableForm);
-// 				let fields = tableForm2.form.fields;
-// 				let tableId = tableForm2.form.tableId;
-// 				for(let i=0;i<fields.length;i++){
-// 					if(fields[i].controlType=='11'||fields[i].controlType=='14'){
-// 						fields[i].text="";
-// 						fields[i].options=[];
-// 					}
-// 				}
-// 				let subTableList = tableForm2.form.subTableList,fields2;
-// 				for(let i=0;i<subTableList.length;i++){
-// 					fields2 = subTableList[i].fields;
-// 					subTableList[i].data=[];
-// 					//初始化子表下拉框 this.tableForm.form.subTableList[i].fields[k]
-// 					if(!fields2){
-// 						continue
-// 					}
-// 					for (let k=0;k<fields2.length;k++) {
-// 						if(fields2[k].controlType=='11'||fields2[k].controlType=='14'){
-// 							fields2[k].text="";
-// 							fields2[k].options=[];
-// 						}
-// 					}
-// 					}
+				let tableForm2 = Object.assign({},this.tableForm) ;
+				let fields1 = tableForm2.form.fields;
+				let tableId = tableForm2.form.tableId;
+				for(let i=0;i<fields1.length;i++){
+					if(fields1[i].options){
+						fields1[i].text = this.getText(fields1[i]);
+					}else if(fields1[i].controlType==9){
+						//凭证
+						if(fields1[i].value.split('[')){
+							let ar = this.jsonToObj(fields1[i].value);
+							for(let b=0;b<ar.length;b++){
+								ar.urlName = this.getPzImageName(fields1[i].value);
+							}
+							fields1[i].pzList = this.jsonToObj(fields1[i].value);
+						}else{
+							fields1[i].urlName = this.getPzImageName(fields1[i].value);
+						}
+						console.log(JSON.stringify(fields1[i]))
+						
+					}
+				}
+				let subTableList = tableForm2.form.subTableList,fields,dataList;
+				for(let i=0;i<subTableList.length;i++){
+					fields = subTableList[i].fields;
+					dataList = subTableList[i].dataList;
+					if(dataList.length==0){
+						continue;
+					}
+					subTableList[i].data=[];
+					subTableList[i].data.push(fields);
+					//初始化子表下拉框
+					for(let u=0;u<dataList.length;u++){
+						for (let k=0;k<fields.length;k++) {
+							if(tableForm2.form.tableName.indexOf('客户调级')>-1){
+								if(fields[k].key=='dhjsgw'){
+									fields[k].controlType = 18;
+								}
+							}
+						}
+						subTableList[i].data[u] = this.$util.copyArr(fields);
+						for (let k=0;k<fields.length;k++) {
+							subTableList[i].data[u][k].value = dataList[u][fields[k].key];
+							if(subTableList[i].data[u][k].options){
+								subTableList[i].data[u][k].text = this.getText(subTableList[i].data[u][k]);
+							}else if(item.controlType==9){
+								
+							}
+						}
+					}
+				}
 				// console.log("----:"+JSON.stringify(tableForm2))
 				return tableForm2
 			}
@@ -304,6 +331,7 @@
 			datePicker
 		},
 		created(){
+			this.dtMode = 'minute';
 			this.fromPage="newForm";
 			
 			let isDraft = false;//是否为草稿
@@ -398,7 +426,7 @@
 			}
 			
 // 			setTimeout(()=>{
-// 				console.log(JSON.stringify(this.tableForm));
+// 				console.log(JSON.stringify(this.tableFormToo));
 // 			},5000)
 		},
 	  	methods:{
@@ -462,13 +490,8 @@
 			},
 			//确定
 			sureDtPicker(value){
-// 				this.currentDate.year = parseInt(value.split('-')[0]);//加parseInt，否则日历上颜色标记不上
-// 				this.currentDate.month = parseInt(value.split('-')[1]);
 				this.dtPickerItem.value = value;
-				//isAnswer
-				
 				this.hideDtPicker();
-				// this.$refs.vueTimes.getMonthDay();
 			},
 			onConfirm(e) {
 				
@@ -693,18 +716,9 @@
 											text = ar[i].value
 										}
 									}
-// 								_this.$set(_this.tableForm.form.fields[index],'text',text);	
-// 								_this.$set(_this.tableForm.form.fields[index],'options',ar2);	
 								item.text = text;
 								item.options = ar2;
-								// this.tableForm.form.subTableList[i].fields[k]
-								
-								/* setTimeout(function(){
-									_this.tableForm.form.subTableList[0].fields = [];
-									// _this.$set(_this.tableForm.form.fields[index],'text',text);
-								},3000) */
-								
-								console.log(JSON.stringify(item.options))
+								// console.log(JSON.stringify(item.options))
 							}
 						}
 					},false);
@@ -1337,7 +1351,7 @@
 										let resdata = JSON.parse(res.data);
 										console.log(JSON.stringify(resdata));
 										
-										item.value = resdata;
+										// item.value = resdata;
 										if(resdata.code==0){
 											let data = resdata.data;
 											for(let i=0;i<data.length;i++){
@@ -1347,8 +1361,8 @@
 													name:data[i].name,
 												})
 											}
-											console.log(JSON.stringify(item))
 											item.value = JSON.stringify(ar);
+											// console.log(JSON.stringify(item))
 										}else{
 											uni.showToast({
 												icon:"none",
@@ -1998,49 +2012,48 @@
 	     	}else{
 	     	return []
 	     	}
-	     }
-	  },
-	  filters:{
-	  	//凭证json过滤
-	     getPzImage(value){
-	     	let va = value.replace(/￥@@￥/g,'"');
-	     	if(isJSON(va)){
-	     		let d = JSON.parse(va);
-	     		return d[0].url
-	     	}else{
-	     		return value;
-	     	}
 	     },
-	     //凭证json过滤
-	     getPzImageName(value){
-	     	if(!value){
-	     		return ''
-	     	}
-	     	let va = value.replace(/￥@@￥/g,'"');
-	     	if(isJSON(va)){
-	     		let d = JSON.parse(va);
-	     		return d[0].url?d[0].url.split('/')[(d[0].url.split('/').length-1)]:d[0].name
-	     	}else{
-	     		return value.split('/')[4];
-	     	}
-	     },
-	     //获取select的text值
-	     getText(item){
-  			let text='';
-  			if((item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14)&&item.options){
-  				//根据select的value值，获取它的文本值
-  				let options = item.options;
-  				for(let i=0;i<options.length;i++){
-	  				if(options[i].value==item.value){
-	  					text = options[i].text;
-	  				}
-	  			}
-  			}else{
-  				text = item.value;
-  			}
-  			return text
-  		},
+			 //凭证json过滤
+			 getPzImage(value){
+			 	let va = value.replace(/￥@@￥/g,'"');
+			 	if(isJSON(va)){
+			 		let d = JSON.parse(va);
+			 		return d[0].url
+			 	}else{
+			 		return value;
+			 	}
+			 },
+			 //凭证json过滤
+			 getPzImageName(value){
+			 	if(!value){
+			 		return ''
+			 	}
+			 	let va = value.replace(/￥@@￥/g,'"');
+			 	if(isJSON(va)){
+			 		let d = JSON.parse(va);
+			 		return d[0].url?d[0].url.split('/')[(d[0].url.split('/').length-1)]:d[0].name
+			 	}else{
+			 		return value.split('/')[4];
+			 	}
+			 },
+			 //获取select的text值
+			 getText(item){
+			 let text='';
+			 if((item.controlType==3||item.controlType==11||item.controlType==13||item.controlType==14)&&item.options){
+			 	//根据select的value值，获取它的文本值
+			 	let options = item.options;
+			 	for(let i=0;i<options.length;i++){
+			 		if(options[i].value==item.value){
+			 			text = options[i].label;
+			 		}
+			 	}
+			 }else{
+			 	text = item.value;
+			 }
+			 return text
+			 }
 	  }
+	 
 	}
 	
 	
